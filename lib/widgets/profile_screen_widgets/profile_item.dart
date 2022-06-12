@@ -17,7 +17,7 @@ class ProfileItem extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          flex: 3,
+          flex: 2,
           child: GlobalText(
             content: leadTitle,
             size: 16.0,
@@ -26,7 +26,7 @@ class ProfileItem extends StatelessWidget {
           ),
         ),
         Expanded(
-          flex: 4,
+          flex: 6,
           child: GlobalText(
             content: ': $content',
             size: 16.0,

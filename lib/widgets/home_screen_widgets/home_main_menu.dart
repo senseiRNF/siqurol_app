@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:siqurol_app/miscellaneous/data_classes/main_menu.dart';
+import 'package:siqurol_app/miscellaneous/data_classes/main_menu_data.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
 
 class HomeMainMenu extends StatelessWidget {
-  final MainMenuClasses mainMenu;
+  final MainMenuData mainMenu;
 
   const HomeMainMenu({
     Key? key,

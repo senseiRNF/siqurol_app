@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
+import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
-import 'package:siqurol_app/widgets/global_text.dart';
 
 class LoginScreenHeader extends StatelessWidget {
   final int selectedMenu;
@@ -16,63 +16,53 @@ class LoginScreenHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
+        GlobalPadding(
+          paddingClass: const GlobalPaddingClass(
+            paddingLeft: 10.0,
+            paddingTop: 20.0,
+            paddingRight: 10.0,
+            paddingBottom: 30.0,
+          ),
+          content: Image.asset(
+            '${GlobalString.assetImagePath}/icon_kemenkes_ext.png',
+            width: MediaQuery.of(context).size.width / 2,
+          ),
+        ),
+        Row(
           children: [
-            Image.asset(
-              '${GlobalString.assetImagePath}/icon_kemenkes_ext.png',
-              width: MediaQuery.of(context).size.width / 2,
-            ),
-            const SizedBox(
-              height: 35.0,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => onChange(0),
-                      child: GlobalText(
-                        content: 'Masuk',
-                        size: 20.0,
-                        color: selectedMenu == 0 ? GlobalColor.defaultGreen : GlobalColor.defaultWhite,
-                        align: TextAlign.center,
-                        isBold: true,
-                        padding: const GlobalPaddingClass(
-                          paddingTop: 10.0,
-                          paddingBottom: 10.0,
-                        ),
-                      ),
-                    ),
+            Expanded(
+              child: Material(
+                color: Colors.transparent,
+                child: GlobalElevatedButton(
+                  onPressed: () => onChange(0),
+                  title: 'Masuk',
+                  btnColor: GlobalColor.defaultGreen,
+                  padding: const GlobalPaddingClass(
+                    paddingLeft: 10.0,
+                    paddingRight: 10.0,
                   ),
                 ),
-                Expanded(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => onChange(1),
-                      child: GlobalText(
-                        content: 'Daftar',
-                        size: 20.0,
-                        color: selectedMenu != 0 ? GlobalColor.defaultGreen : GlobalColor.defaultWhite,
-                        align: TextAlign.center,
-                        isBold: true,
-                        padding: const GlobalPaddingClass(
-                          paddingTop: 10.0,
-                          paddingBottom: 10.0,
-                        ),
-                      ),
-                    ),
+              ),
+            ),
+            Expanded(
+              child: Material(
+                color: Colors.transparent,
+                child: GlobalElevatedButton(
+                  onPressed: () => onChange(1),
+                  title: 'Daftar',
+                  btnColor: GlobalColor.defaultGreen,
+                  padding: const GlobalPaddingClass(
+                    paddingLeft: 10.0,
+                    paddingRight: 10.0,
                   ),
                 ),
-              ],
+              ),
             ),
           ],
         ),
-        /**/
       ],
     );
   }

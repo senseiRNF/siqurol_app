@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
+import 'package:siqurol_app/screens/home_screen.dart';
 import 'package:siqurol_app/screens/login_screen.dart';
+import 'package:siqurol_app/services/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -16,8 +19,22 @@ class _SplashScreen extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 2), () {
-      GlobalRoute(context: context).replaceWith(const LoginScreen());
+    initLoad();
+  }
+
+  void initLoad() async {
+    await SharedPref().readAuthorization().then((AuthData? auth) {
+      if(auth != null) {
+        Future.delayed(const Duration(seconds: 2), () {
+          GlobalRoute(context: context).replaceWith(HomeScreen(
+            isAdmin: auth.role == 'admin' ? true : false,
+          ));
+        });
+      } else {
+        Future.delayed(const Duration(seconds: 2), () {
+          GlobalRoute(context: context).replaceWith(const LoginScreen());
+        });
+      }
     });
   }
 

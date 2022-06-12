@@ -14,6 +14,16 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   int selectedMenu = 0;
 
+  TextEditingController emailTEC = TextEditingController();
+  TextEditingController passTEC = TextEditingController();
+
+  TextEditingController signupNameTEC = TextEditingController();
+  TextEditingController signupEmailTEC = TextEditingController();
+  TextEditingController signupPhoneTEC = TextEditingController();
+  TextEditingController singupAddressTEC = TextEditingController();
+  TextEditingController signupPassTEC = TextEditingController();
+  TextEditingController signupConfPassTEC = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -22,7 +32,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Stack(
           children: [
@@ -39,27 +48,37 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ),
-            Column(
-              children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height / 3,
-                  child: LoginScreenHeader(
-                    selectedMenu: selectedMenu,
-                    onChange: (result) {
-                      setState(() {
-                        selectedMenu = result;
-                      });
-                    },
-                  ),
-                ),
-                selectedMenu == 0 ?
-                const Expanded(
-                  child: LoginFragment(),
-                ) :
-                const Expanded(
-                  child: SignUpFragment(),
-                ),
-              ],
+            Builder(
+              builder: (BuildContext bottomContext) {
+                return LoginScreenHeader(
+                  selectedMenu: selectedMenu,
+                  onChange: (result) {
+                    setState(() {
+                      selectedMenu = result;
+                    });
+
+                    Scaffold.of(bottomContext).showBottomSheet((BuildContext bottomSheetContext) {
+                        return selectedMenu == 0 ?
+                        LoginFragment(
+                          topPadding: MediaQuery.of(context).viewPadding.top,
+                          emailTEC: emailTEC,
+                          passTEC: passTEC,
+                        ) :
+                        SignUpFragment(
+                          topPadding: MediaQuery.of(context).viewPadding.top,
+                          emailTEC: signupEmailTEC,
+                          nameTEC: signupNameTEC,
+                          phoneTEC: signupPhoneTEC,
+                          addressTEC: singupAddressTEC,
+                          passTEC: signupPassTEC,
+                          confPassTEC: signupConfPassTEC,
+                        );
+                      },
+                      backgroundColor: Colors.transparent,
+                    );
+                  },
+                );
+              },
             ),
           ],
         ),

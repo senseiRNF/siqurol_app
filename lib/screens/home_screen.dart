@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:siqurol_app/miscellaneous/data_classes/main_menu.dart';
+import 'package:siqurol_app/miscellaneous/data_classes/main_menu_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_dialog.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
+import 'package:siqurol_app/screens/admin_certificate_screen.dart';
+import 'package:siqurol_app/screens/admin_schedule_screen.dart';
 import 'package:siqurol_app/screens/certificate_screen.dart';
 import 'package:siqurol_app/screens/form_screen.dart';
 import 'package:siqurol_app/screens/profile_screen.dart';
 import 'package:siqurol_app/screens/schedule_screen.dart';
 import 'package:siqurol_app/screens/splash_screen.dart';
+import 'package:siqurol_app/screens/admin_form_screen.dart';
+import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/header_widgets.dart';
@@ -26,7 +30,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<MainMenuClasses> mainMenu = [];
+  List<MainMenuData> mainMenu = [];
 
   @override
   void initState() {
@@ -35,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if(widget.isAdmin) {
       setState(() {
         mainMenu = [
-          MainMenuClasses(
+          MainMenuData(
             imagePath: '${GlobalString.assetImagePath}/profile_icon.png',
             title: 'Profil',
             onPressed: () {
@@ -44,29 +48,29 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
           ),
-          MainMenuClasses(
+          MainMenuData(
             imagePath: '${GlobalString.assetImagePath}/participant_icon.png',
             title: 'Data Peserta',
             onPressed: () {
-              GlobalRoute(context: context).moveTo(const ParticipantScreen(), (callback) {
+              GlobalRoute(context: context).moveTo(const AdminFormScreen(), (callback) {
 
               });
             },
           ),
-          MainMenuClasses(
+          MainMenuData(
             imagePath: '${GlobalString.assetImagePath}/schedule_icon.png',
             title: 'Jadwal Peserta',
             onPressed: () {
-              GlobalRoute(context: context).moveTo(const ParticipantScheduleScreen(), (callback) {
+              GlobalRoute(context: context).moveTo(const AdminScheduleScreen(), (callback) {
 
               });
             },
           ),
-          MainMenuClasses(
+          MainMenuData(
             imagePath: '${GlobalString.assetImagePath}/certificate_icon.png',
             title: 'Sertifikat Peserta',
             onPressed: () {
-              GlobalRoute(context: context).moveTo(const ParticipantCertificateScreen(), (callback) {
+              GlobalRoute(context: context).moveTo(const AdminCertificateScreen(), (callback) {
 
               });
             },
@@ -76,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       setState(() {
         mainMenu = [
-          MainMenuClasses(
+          MainMenuData(
             imagePath: '${GlobalString.assetImagePath}/profile_icon.png',
             title: 'Profil',
             onPressed: () {
@@ -85,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
           ),
-          MainMenuClasses(
+          MainMenuData(
             imagePath: '${GlobalString.assetImagePath}/form_icon.png',
             title: 'Formulir',
             onPressed: () {
@@ -94,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
           ),
-          MainMenuClasses(
+          MainMenuData(
             imagePath: '${GlobalString.assetImagePath}/schedule_icon.png',
             title: 'Jadwal',
             onPressed: () {
@@ -103,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
               });
             },
           ),
-          MainMenuClasses(
+          MainMenuData(
             imagePath: '${GlobalString.assetImagePath}/certificate_icon.png',
             title: 'Sertifikat',
             onPressed: () {
@@ -151,8 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             GlobalElevatedButton(
               onPressed: () {
-                GlobalDialog(context: context, message: 'Keluar dari sesi saat ini, Anda yakin?').optionDialog(() {
-                  GlobalRoute(context: context).replaceWith(const SplashScreen());
+                GlobalDialog(context: context, message: 'Keluar dari sesi saat ini, Anda yakin?').optionDialog(() async {
+                  await SharedPref().deleteAuthorization().then((result) {
+                    GlobalRoute(context: context).replaceWith(const SplashScreen());
+                  });
                 }, () {
 
                 });
