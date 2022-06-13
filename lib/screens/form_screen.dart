@@ -105,7 +105,7 @@ class _FormScreenState extends State<FormScreen> {
                       paddingRight: 20.0,
                       paddingBottom: 20.0,
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

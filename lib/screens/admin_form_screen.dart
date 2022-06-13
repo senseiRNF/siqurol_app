@@ -3,6 +3,7 @@ import 'package:siqurol_app/miscellaneous/data_classes/form_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
+import 'package:siqurol_app/widgets/global_input_field.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
 import 'package:siqurol_app/widgets/header_widgets.dart';
@@ -15,6 +16,11 @@ class AdminFormScreen extends StatefulWidget {
 }
 
 class _AdminFormScreenState extends State<AdminFormScreen> {
+  TextEditingController participantName = TextEditingController();
+  TextEditingController instanceName = TextEditingController();
+  TextEditingController workshopPlace = TextEditingController();
+  TextEditingController workshopType = TextEditingController();
+
   List<FormData> workshopDataList = [];
 
   @override
@@ -146,15 +152,94 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
               ),
             ),
             workshopDataList.isNotEmpty ?
-            GlobalElevatedButton(
-              onPressed: () {
-
+            Builder(
+              builder: (BuildContext bottomContext) {
+                return GlobalElevatedButton(
+                  onPressed: () {
+                    Scaffold.of(bottomContext).showBottomSheet((BuildContext bottomSheetcontext) {
+                      return Container(
+                        height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top,
+                        decoration: BoxDecoration(
+                          color: GlobalColor.defaultWhite,
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(30.0,),
+                            topRight: Radius.circular(30.0,),
+                          ),
+                        ),
+                        child: Center(
+                          child: ListView(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: [
+                              GlobalTextfield(
+                                controller: participantName,
+                                title: 'Nama Lengkap',
+                                capitalization: TextCapitalization.words,
+                                isBordered: true,
+                                padding: const GlobalPaddingClass(
+                                  paddingLeft: 20.0,
+                                  paddingRight: 20.0,
+                                  paddingTop: 20.0,
+                                ),
+                              ),
+                              GlobalTextfield(
+                                controller: instanceName,
+                                title: 'Nama Instansi',
+                                capitalization: TextCapitalization.words,
+                                isBordered: true,
+                                padding: const GlobalPaddingClass(
+                                  paddingLeft: 20.0,
+                                  paddingRight: 20.0,
+                                  paddingTop: 20.0,
+                                ),
+                              ),
+                              GlobalTextfield(
+                                controller: workshopPlace,
+                                title: 'Tempat Pelatihan',
+                                capitalization: TextCapitalization.words,
+                                isBordered: true,
+                                padding: const GlobalPaddingClass(
+                                  paddingLeft: 20.0,
+                                  paddingRight: 20.0,
+                                  paddingTop: 20.0,
+                                ),
+                              ),
+                              GlobalTextfield(
+                                controller: workshopType,
+                                title: 'Pelatihan Yang Diikuti',
+                                capitalization: TextCapitalization.words,
+                                isBordered: true,
+                                padding: const GlobalPaddingClass(
+                                  paddingLeft: 20.0,
+                                  paddingRight: 20.0,
+                                  paddingTop: 20.0,
+                                ),
+                              ),
+                              GlobalElevatedButton(
+                                onPressed: () {
+                                  GlobalRoute(context: context).back(null);
+                                },
+                                title: 'Simpan',
+                                padding: const GlobalPaddingClass(
+                                  paddingLeft: 20.0,
+                                  paddingTop: 20.0,
+                                  paddingRight: 20.0,
+                                  paddingBottom: 20.0,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+                  },
+                  title: 'Tambah Data',
+                  padding: const GlobalPaddingClass(
+                    paddingTop: 20.0,
+                    paddingBottom: 20.0,
+                  ),
+                );
               },
-              title: 'Tambah Data',
-              padding: const GlobalPaddingClass(
-                paddingTop: 20.0,
-                paddingBottom: 20.0,
-              ),
             ) :
             const Material(),
           ],
