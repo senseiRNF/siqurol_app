@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/schedule_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
@@ -15,7 +16,11 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  ScheduleData? scheduleData;
+  ScheduleData? scheduleData = ScheduleData(
+    zoomLink: 'https://www.example.com',
+    workshopDate: DateTime(2022, 06, 13),
+    workshopTime: '10:00',
+  );
 
   @override
   void initState() {
@@ -45,7 +50,47 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             ),
             Expanded(
               child: scheduleData != null ?
-              ListView() :
+              ListView(
+                children: [
+                  InkWell(
+                    onTap: () {
+
+                    },
+                    borderRadius: BorderRadius.circular(4.0,),
+                    child: Column(
+                      children: [
+                        const GlobalText(
+                          content: 'Anda dijadwalkan untuk mengikuti pelatihan pada:',
+                          size: 16.0,
+                          padding: GlobalPaddingClass(
+                            paddingTop: 10.0,
+                            paddingBottom: 10.0,
+                          ),
+                        ),
+                        GlobalText(
+                          content: "${DateFormat('dd MMMM yyyy').format(scheduleData!.workshopDate)} ${scheduleData!.workshopTime}",
+                          size: 26.0,
+                          isBold: true,
+                          padding: const GlobalPaddingClass(
+                            paddingBottom: 10.0,
+                          ),
+                        ),
+                        const GlobalText(
+                          content: 'Zoom Link',
+                          size: 16.0,
+                        ),
+                        GlobalText(
+                          content: scheduleData!.zoomLink,
+                          size: 20.0,
+                          padding: const GlobalPaddingClass(
+                            paddingBottom: 10.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ) :
               Stack(
                 children: [
                   Column(

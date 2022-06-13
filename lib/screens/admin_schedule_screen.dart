@@ -105,6 +105,9 @@ class _AdminScheduleScreenState extends State<AdminScheduleScreen> {
                                   align: TextAlign.center,
                                 ),
                               ),
+                              const Icon(
+                                Icons.edit,
+                              ),
                             ],
                           ),
                         ),

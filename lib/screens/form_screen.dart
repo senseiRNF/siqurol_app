@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
+import 'package:siqurol_app/widgets/global_input_field.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
 import 'package:siqurol_app/widgets/header_widgets.dart';
@@ -14,6 +15,10 @@ class FormScreen extends StatefulWidget {
 }
 
 class _FormScreenState extends State<FormScreen> {
+  TextEditingController participantName = TextEditingController();
+  TextEditingController instanceName = TextEditingController();
+  TextEditingController workshopPlace = TextEditingController();
+  TextEditingController workshopType = TextEditingController();
 
   @override
   void initState() {
@@ -33,7 +38,7 @@ class _FormScreenState extends State<FormScreen> {
               },
             ),
             GlobalText(
-              content: 'Form',
+              content: 'Formulir',
               size: 26.0,
               color: GlobalColor.defaultBlue,
               isBold: true,
@@ -43,55 +48,65 @@ class _FormScreenState extends State<FormScreen> {
               ),
             ),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0,),
-                child: ListView(
-                  children: [
-                    Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0,),
-                      ),
-                      child: InkWell(
-                        onTap: () {
-
-                        },
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.0,),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0,),
-                          child: Row(
-                            children: const [
-                              Expanded(
-                                child: GlobalText(
-                                  content: 'Pelatihan Yang Diikuti',
-                                  size: 18.0,
-                                ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10.0,),
-                                child: Icon(
-                                  Icons.expand_more,
-                                  size: 20.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+              child: ListView(
+                children: [
+                  GlobalTextfield(
+                    controller: participantName,
+                    title: 'Nama Lengkap',
+                    capitalization: TextCapitalization.words,
+                    isBordered: true,
+                    padding: const GlobalPaddingClass(
+                      paddingLeft: 20.0,
+                      paddingRight: 20.0,
+                      paddingTop: 20.0,
                     ),
-                    GlobalElevatedButton(
-                      onPressed: () {
+                  ),
+                  GlobalTextfield(
+                    controller: instanceName,
+                    title: 'Nama Instansi',
+                    capitalization: TextCapitalization.words,
+                    isBordered: true,
+                    padding: const GlobalPaddingClass(
+                      paddingLeft: 20.0,
+                      paddingRight: 20.0,
+                      paddingTop: 20.0,
+                    ),
+                  ),
+                  GlobalTextfield(
+                    controller: workshopPlace,
+                    title: 'Tempat Pelatihan',
+                    capitalization: TextCapitalization.words,
+                    isBordered: true,
+                    padding: const GlobalPaddingClass(
+                      paddingLeft: 20.0,
+                      paddingRight: 20.0,
+                      paddingTop: 20.0,
+                    ),
+                  ),
+                  GlobalTextfield(
+                    controller: workshopType,
+                    title: 'Pelatihan Yang Diikuti',
+                    capitalization: TextCapitalization.words,
+                    isBordered: true,
+                    padding: const GlobalPaddingClass(
+                      paddingLeft: 20.0,
+                      paddingRight: 20.0,
+                      paddingTop: 20.0,
+                    ),
+                  ),
+                  GlobalElevatedButton(
+                    onPressed: () {
 
-                      },
-                      title: 'Simpan',
-                      padding: const GlobalPaddingClass(
-                        paddingTop: 20.0,
-                        paddingBottom: 20.0,
-                      ),
-                    )
-                  ],
-                ),
+                    },
+                    title: 'Simpan',
+                    padding: const GlobalPaddingClass(
+                      paddingLeft: 20.0,
+                      paddingTop: 20.0,
+                      paddingRight: 20.0,
+                      paddingBottom: 20.0,
+                    ),
+                  )
+                ],
               ),
             ),
           ],

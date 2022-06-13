@@ -15,7 +15,10 @@ class CertificateScreen extends StatefulWidget {
 }
 
 class _CertificateScreenState extends State<CertificateScreen> {
-  CertificateData? certificateData;
+  CertificateData? certificateData = CertificateData(
+    participantName: 'User Example',
+    certificateUrl: 'https://www.example.com',
+  );
 
   @override
   void initState() {
@@ -45,7 +48,51 @@ class _CertificateScreenState extends State<CertificateScreen> {
             ),
             Expanded(
               child: certificateData != null ?
-              ListView() :
+              ListView(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  InkWell(
+                    onTap: () {
+
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+                        Image.asset(
+                          '${GlobalString.assetImagePath}/certificate_icon.png',
+                          height: 80.0,
+                        ),
+                        const GlobalText(
+                          content: 'Sertifikat Ditemukan...',
+                          size: 20.0,
+                          isBold: true,
+                          align: TextAlign.center,
+                          padding: GlobalPaddingClass(
+                            paddingTop: 20.0,
+                          ),
+                        ),
+                        const GlobalText(
+                          content: 'Ketuk disini untuk mengunduh sertifikat',
+                          size: 16.0,
+                          align: TextAlign.center,
+                          padding: GlobalPaddingClass(
+                            paddingBottom: 20.0,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.download,
+                          size: 30.0,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ) :
               Stack(
                 children: [
                   Column(
