@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/schedule_data.dart';
-import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
-import 'package:siqurol_app/widgets/header_widgets.dart';
+import 'package:siqurol_app/widgets/global_header.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({Key? key}) : super(key: key);
@@ -18,8 +17,8 @@ class ScheduleScreen extends StatefulWidget {
 class _ScheduleScreenState extends State<ScheduleScreen> {
   ScheduleData? scheduleData = ScheduleData(
     zoomLink: 'https://www.example.com',
-    workshopDate: DateTime(2022, 06, 13),
-    workshopTime: '10:00',
+    trainingDate: DateTime(2022, 06, 13),
+    trainingTime: '10:00',
   );
 
   @override
@@ -33,11 +32,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ScreenHeader(
-              onBackPressed: () {
-                GlobalRoute(context: context).back(null);
-              },
-            ),
+            const GlobalHeader(),
             GlobalText(
               content: 'Jadwal',
               size: 26.0,
@@ -68,7 +63,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                           ),
                         ),
                         GlobalText(
-                          content: "${DateFormat('dd MMMM yyyy').format(scheduleData!.workshopDate)} ${scheduleData!.workshopTime}",
+                          content: "${DateFormat('dd MMMM yyyy').format(scheduleData!.trainingDate)} ${scheduleData!.trainingTime}",
                           size: 26.0,
                           isBold: true,
                           padding: const GlobalPaddingClass(

@@ -6,7 +6,7 @@ import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_input_field.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
-import 'package:siqurol_app/widgets/header_widgets.dart';
+import 'package:siqurol_app/widgets/global_header.dart';
 
 class AdminFormScreen extends StatefulWidget {
   const AdminFormScreen({Key? key}) : super(key: key);
@@ -18,36 +18,36 @@ class AdminFormScreen extends StatefulWidget {
 class _AdminFormScreenState extends State<AdminFormScreen> {
   TextEditingController participantName = TextEditingController();
   TextEditingController instanceName = TextEditingController();
-  TextEditingController workshopPlace = TextEditingController();
-  TextEditingController workshopType = TextEditingController();
+  TextEditingController trainingPlace = TextEditingController();
+  TextEditingController trainingType = TextEditingController();
 
-  List<FormData> workshopDataList = [];
+  List<FormData> trainingDataList = [];
 
   @override
   void initState() {
     super.initState();
 
     setState(() {
-      workshopDataList = [
+      trainingDataList = [
         FormData(
           participantName: 'Dian Utami',
           instanceName: 'PT. ABC',
-          workshopPlace: 'Bogor',
+          trainingPlace: 'Bogor',
         ),
         FormData(
           participantName: 'Mawar Sekar Ayu',
           instanceName: 'PT. DEF',
-          workshopPlace: 'Jakarta',
+          trainingPlace: 'Jakarta',
         ),
         FormData(
           participantName: 'Eka Saputra',
           instanceName: 'PT. GHI',
-          workshopPlace: 'Jakarta',
+          trainingPlace: 'Jakarta',
         ),
         FormData(
           participantName: 'Jajang Sudrajat',
           instanceName: 'PT. JKL',
-          workshopPlace: 'Bogor',
+          trainingPlace: 'Bogor',
         ),
       ];
     });
@@ -59,11 +59,7 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ScreenHeader(
-              onBackPressed: () {
-                GlobalRoute(context: context).back(null);
-              },
-            ),
+            const GlobalHeader(),
             GlobalText(
               content: 'Data Peserta',
               size: 26.0,
@@ -77,9 +73,9 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10.0,),
-                child: workshopDataList.isNotEmpty ?
+                child: trainingDataList.isNotEmpty ?
                 ListView.builder(
-                  itemCount: workshopDataList.length,
+                  itemCount: trainingDataList.length,
                   itemBuilder: (BuildContext workshopListContext, int index) {
                     return Card(
                       shape: RoundedRectangleBorder(
@@ -95,7 +91,7 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
                           ).then((DateTime? result) {
                             if(result != null) {
                               setState(() {
-                                workshopDataList[index].workshopDate = result;
+                                trainingDataList[index].trainingDate = result;
                               });
                             }
                           });
@@ -110,23 +106,23 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
                             children: [
                               Expanded(
                                 child: GlobalText(
-                                  content: workshopDataList[index].participantName,
+                                  content: trainingDataList[index].participantName,
                                   align: TextAlign.center,
                                 ),
                               ),
                               Expanded(
                                 child: GlobalText(
-                                  content: workshopDataList[index].instanceName,
+                                  content: trainingDataList[index].instanceName,
                                   align: TextAlign.center,
                                 ),
                               ),
                               Expanded(
                                 child: GlobalText(
-                                  content: workshopDataList[index].workshopPlace,
+                                  content: trainingDataList[index].trainingPlace,
                                   align: TextAlign.center,
                                 ),
                               ),
-                              workshopDataList[index].workshopDate != null ?
+                              trainingDataList[index].trainingDate != null ?
                               Icon(
                                 Icons.check,
                                 color: GlobalColor.defaultGreen,
@@ -151,7 +147,7 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
                 ),
               ),
             ),
-            workshopDataList.isNotEmpty ?
+            trainingDataList.isNotEmpty ?
             Builder(
               builder: (BuildContext bottomContext) {
                 return GlobalElevatedButton(
@@ -194,7 +190,7 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
                                 ),
                               ),
                               GlobalTextfield(
-                                controller: workshopPlace,
+                                controller: trainingPlace,
                                 title: 'Tempat Pelatihan',
                                 capitalization: TextCapitalization.words,
                                 isBordered: true,
@@ -205,7 +201,7 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
                                 ),
                               ),
                               GlobalTextfield(
-                                controller: workshopType,
+                                controller: trainingType,
                                 title: 'Pelatihan Yang Diikuti',
                                 capitalization: TextCapitalization.words,
                                 isBordered: true,

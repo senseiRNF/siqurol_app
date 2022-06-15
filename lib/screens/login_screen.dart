@@ -14,16 +14,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   int selectedMenu = 0;
 
-  TextEditingController emailTEC = TextEditingController();
-  TextEditingController passTEC = TextEditingController();
-
-  TextEditingController signupNameTEC = TextEditingController();
-  TextEditingController signupEmailTEC = TextEditingController();
-  TextEditingController signupPhoneTEC = TextEditingController();
-  TextEditingController singupAddressTEC = TextEditingController();
-  TextEditingController signupPassTEC = TextEditingController();
-  TextEditingController signupConfPassTEC = TextEditingController();
-
   @override
   void initState() {
     super.initState();
@@ -61,17 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         return selectedMenu == 0 ?
                         LoginFragment(
                           topPadding: MediaQuery.of(context).viewPadding.top,
-                          emailTEC: emailTEC,
-                          passTEC: passTEC,
                         ) :
                         SignUpFragment(
                           topPadding: MediaQuery.of(context).viewPadding.top,
-                          emailTEC: signupEmailTEC,
-                          nameTEC: signupNameTEC,
-                          phoneTEC: signupPhoneTEC,
-                          addressTEC: singupAddressTEC,
-                          passTEC: signupPassTEC,
-                          confPassTEC: signupConfPassTEC,
                         );
                       },
                       backgroundColor: Colors.transparent,

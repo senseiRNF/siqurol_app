@@ -7,7 +7,7 @@ import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_input_field.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
-import 'package:siqurol_app/widgets/header_widgets.dart';
+import 'package:siqurol_app/widgets/global_header.dart';
 
 class AdminScheduleScreen extends StatefulWidget {
   const AdminScheduleScreen({Key? key}) : super(key: key);
@@ -33,18 +33,18 @@ class _AdminScheduleScreenState extends State<AdminScheduleScreen> {
       scheduleDataList = [
         ScheduleData(
           zoomLink: 'https://www.abcde.com',
-          workshopDate: DateTime(2022, 06, 13),
-          workshopTime: '10.00',
+          trainingDate: DateTime(2022, 06, 13),
+          trainingTime: '10.00',
         ),
         ScheduleData(
           zoomLink: 'https://www.fghij.com',
-          workshopDate: DateTime(2022, 06, 15),
-          workshopTime: '09.00',
+          trainingDate: DateTime(2022, 06, 15),
+          trainingTime: '09.00',
         ),
         ScheduleData(
           zoomLink: 'https://www.klmno.com',
-          workshopDate: DateTime(2022, 06, 17),
-          workshopTime: '08.00',
+          trainingDate: DateTime(2022, 06, 17),
+          trainingTime: '08.00',
         ),
       ];
     });
@@ -56,11 +56,7 @@ class _AdminScheduleScreenState extends State<AdminScheduleScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ScreenHeader(
-              onBackPressed: () {
-                GlobalRoute(context: context).back(null);
-              },
-            ),
+            const GlobalHeader(),
             GlobalText(
               content: 'Jadwal Peserta',
               size: 26.0,
@@ -102,13 +98,13 @@ class _AdminScheduleScreenState extends State<AdminScheduleScreen> {
                               ),
                               Expanded(
                                 child: GlobalText(
-                                  content: DateFormat('dd/MM/yyyy').format(scheduleDataList[index].workshopDate),
+                                  content: DateFormat('dd/MM/yyyy').format(scheduleDataList[index].trainingDate),
                                   align: TextAlign.center,
                                 ),
                               ),
                               Expanded(
                                 child: GlobalText(
-                                  content: scheduleDataList[index].workshopTime,
+                                  content: scheduleDataList[index].trainingTime,
                                   align: TextAlign.center,
                                 ),
                               ),

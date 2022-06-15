@@ -11,18 +11,17 @@ import 'package:siqurol_app/widgets/global_padding.dart';
 
 class LoginFragment extends StatelessWidget {
   final double topPadding;
-  final TextEditingController emailTEC;
-  final TextEditingController passTEC;
 
   const LoginFragment({
     Key? key,
     required this.topPadding,
-    required this.emailTEC,
-    required this.passTEC,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController emailTEC = TextEditingController();
+    TextEditingController passTEC = TextEditingController();
+
     return Container(
       height: MediaQuery.of(context).size.height - topPadding,
       decoration: BoxDecoration(

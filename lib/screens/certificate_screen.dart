@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/certificate_data.dart';
-import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
-import 'package:siqurol_app/widgets/header_widgets.dart';
+import 'package:siqurol_app/widgets/global_header.dart';
 
 class CertificateScreen extends StatefulWidget {
   const CertificateScreen({Key? key}) : super(key: key);
@@ -31,11 +30,7 @@ class _CertificateScreenState extends State<CertificateScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ScreenHeader(
-              onBackPressed: () {
-                GlobalRoute(context: context).back(null);
-              },
-            ),
+            const GlobalHeader(),
             GlobalText(
               content: 'Sertifikat',
               size: 26.0,

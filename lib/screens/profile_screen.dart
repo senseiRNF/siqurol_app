@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
-import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
-import 'package:siqurol_app/widgets/header_widgets.dart';
+import 'package:siqurol_app/widgets/global_header.dart';
 import 'package:siqurol_app/widgets/profile_screen_widgets/profile_item.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -49,11 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            ScreenHeader(
-              onBackPressed: () {
-                GlobalRoute(context: context).back(null);
-              },
-            ),
+            const GlobalHeader(),
             Expanded(
               child: ListView(
                 children: [

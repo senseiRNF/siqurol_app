@@ -14,7 +14,7 @@ import 'package:siqurol_app/screens/admin_form_screen.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
-import 'package:siqurol_app/widgets/header_widgets.dart';
+import 'package:siqurol_app/widgets/global_header.dart';
 import 'package:siqurol_app/widgets/home_screen_widgets/home_main_menu.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -128,7 +128,9 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const MainHeader(),
+            const GlobalHeader(
+              isMain: true,
+            ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

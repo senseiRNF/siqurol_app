@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_input_field.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
-import 'package:siqurol_app/widgets/header_widgets.dart';
+import 'package:siqurol_app/widgets/global_header.dart';
 
 class FormScreen extends StatefulWidget {
   const FormScreen({Key? key}) : super(key: key);
@@ -17,8 +16,8 @@ class FormScreen extends StatefulWidget {
 class _FormScreenState extends State<FormScreen> {
   TextEditingController participantName = TextEditingController();
   TextEditingController instanceName = TextEditingController();
-  TextEditingController workshopPlace = TextEditingController();
-  TextEditingController workshopType = TextEditingController();
+  TextEditingController trainingPlace = TextEditingController();
+  TextEditingController trainingType = TextEditingController();
 
   @override
   void initState() {
@@ -32,11 +31,7 @@ class _FormScreenState extends State<FormScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ScreenHeader(
-              onBackPressed: () {
-                GlobalRoute(context: context).back(null);
-              },
-            ),
+            const GlobalHeader(),
             GlobalText(
               content: 'Formulir',
               size: 26.0,
@@ -73,7 +68,7 @@ class _FormScreenState extends State<FormScreen> {
                     ),
                   ),
                   GlobalTextfield(
-                    controller: workshopPlace,
+                    controller: trainingPlace,
                     title: 'Tempat Pelatihan',
                     capitalization: TextCapitalization.words,
                     isBordered: true,
@@ -84,7 +79,7 @@ class _FormScreenState extends State<FormScreen> {
                     ),
                   ),
                   GlobalTextfield(
-                    controller: workshopType,
+                    controller: trainingType,
                     title: 'Pelatihan Yang Diikuti',
                     capitalization: TextCapitalization.words,
                     isBordered: true,

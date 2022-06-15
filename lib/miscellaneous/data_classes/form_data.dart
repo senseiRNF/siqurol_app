@@ -1,13 +1,13 @@
 class FormData {
   String participantName;
   String instanceName;
-  String workshopPlace;
-  DateTime? workshopDate;
+  String trainingPlace;
+  DateTime? trainingDate;
 
   FormData({
     required this.participantName,
     required this.instanceName,
-    required this.workshopPlace,
-    this.workshopDate,
+    required this.trainingPlace,
+    this.trainingDate,
   });
 }

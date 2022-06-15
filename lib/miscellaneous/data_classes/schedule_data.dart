@@ -1,11 +1,11 @@
 class ScheduleData {
   String zoomLink;
-  DateTime workshopDate;
-  String workshopTime;
+  DateTime trainingDate;
+  String trainingTime;
 
   ScheduleData({
     required this.zoomLink,
-    required this.workshopDate,
-    required this.workshopTime,
+    required this.trainingDate,
+    required this.trainingTime,
   });
 }
