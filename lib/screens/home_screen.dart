@@ -6,7 +6,6 @@ import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/screens/admin_certificate_screen.dart';
 import 'package:siqurol_app/screens/admin_schedule_screen.dart';
 import 'package:siqurol_app/screens/certificate_screen.dart';
-import 'package:siqurol_app/screens/form_screen.dart';
 import 'package:siqurol_app/screens/profile_screen.dart';
 import 'package:siqurol_app/screens/schedule_screen.dart';
 import 'package:siqurol_app/screens/splash_screen.dart';
@@ -90,15 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           MainMenuData(
-            imagePath: '${GlobalString.assetImagePath}/form_icon.png',
-            title: 'Formulir',
-            onPressed: () {
-              GlobalRoute(context: context).moveTo(const FormScreen(), (callback) {
-
-              });
-            },
-          ),
-          MainMenuData(
             imagePath: '${GlobalString.assetImagePath}/schedule_icon.png',
             title: 'Jadwal',
             onPressed: () {
@@ -132,27 +122,21 @@ class _HomeScreenState extends State<HomeScreen> {
               isMain: true,
             ),
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemCount: mainMenu.length,
+                itemBuilder: (BuildContext gridContext, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(10.0,),
+                    child: HomeMainMenu(
+                      mainMenu: mainMenu[index],
                     ),
-                    itemCount: mainMenu.length,
-                    itemBuilder: (BuildContext gridContext, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(10.0,),
-                        child: HomeMainMenu(
-                          mainMenu: mainMenu[index],
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                  );
+                },
               ),
             ),
             GlobalElevatedButton(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/widgets/login_screen_widgets/login_fragment.dart';
 import 'package:siqurol_app/widgets/login_screen_widgets/login_screen_header.dart';
@@ -13,6 +14,16 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   int selectedMenu = 0;
+
+  TextEditingController loginEmailTEC = TextEditingController();
+  TextEditingController loginPassTEC = TextEditingController();
+
+  TextEditingController signUpNameTEC = TextEditingController();
+  TextEditingController signUpPhoneTEC = TextEditingController();
+  TextEditingController signUpAddressTEC = TextEditingController();
+  TextEditingController signUpEmailTEC = TextEditingController();
+  TextEditingController signUpPassTEC = TextEditingController();
+  TextEditingController signUpConfPassTEC = TextEditingController();
 
   @override
   void initState() {
@@ -51,12 +62,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         return selectedMenu == 0 ?
                         LoginFragment(
                           topPadding: MediaQuery.of(context).viewPadding.top,
+                          emailTEC: loginEmailTEC,
+                          passTEC: loginPassTEC,
                         ) :
                         SignUpFragment(
                           topPadding: MediaQuery.of(context).viewPadding.top,
+                          nameTEC: signUpNameTEC,
+                          emailTEC: signUpEmailTEC,
+                          phoneTEC: signUpPhoneTEC,
+                          addressTEC: signUpAddressTEC,
+                          passTEC: signUpPassTEC,
+                          confPassTEC: signUpConfPassTEC,
                         );
                       },
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: GlobalColor.defaultWhite,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30.0,),
+                          topRight: Radius.circular(30.0,),
+                        ),
+                      ),
                     );
                   },
                 );

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:siqurol_app/miscellaneous/data_classes/schedule_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
@@ -17,37 +16,10 @@ class AdminScheduleScreen extends StatefulWidget {
 }
 
 class _AdminScheduleScreenState extends State<AdminScheduleScreen> {
-  TextEditingController zoomLinkURLTEC = TextEditingController();
-  TextEditingController workshopDateTEC = TextEditingController();
-  TextEditingController workshopTimeTEC = TextEditingController();
-
-  List<ScheduleData> scheduleDataList = [];
-
-  DateTime? workshopDateTime;
 
   @override
   void initState() {
     super.initState();
-
-    setState(() {
-      scheduleDataList = [
-        ScheduleData(
-          zoomLink: 'https://www.abcde.com',
-          trainingDate: DateTime(2022, 06, 13),
-          trainingTime: '10.00',
-        ),
-        ScheduleData(
-          zoomLink: 'https://www.fghij.com',
-          trainingDate: DateTime(2022, 06, 15),
-          trainingTime: '09.00',
-        ),
-        ScheduleData(
-          zoomLink: 'https://www.klmno.com',
-          trainingDate: DateTime(2022, 06, 17),
-          trainingTime: '08.00',
-        ),
-      ];
-    });
   }
 
   @override
@@ -69,172 +41,154 @@ class _AdminScheduleScreenState extends State<AdminScheduleScreen> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0,),
-                child: scheduleDataList.isNotEmpty ?
-                ListView.builder(
-                  itemCount: scheduleDataList.length,
-                  itemBuilder: (BuildContext workshopListContext, int index) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(50.0,),
-                      ),
-                      child: InkWell(
-                        onTap: () {
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0,),
+                child: Builder(
+                  builder: (BuildContext calendarContext) {
+                    return CalendarDatePicker(
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2022),
+                      lastDate: DateTime(2032),
+                      onDateChanged: (DateTime dateTime) {
+                        DateTime dateNow = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-                        },
-                        customBorder: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50.0,),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0,),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: GlobalText(
-                                  content: scheduleDataList[index].zoomLink,
-                                  align: TextAlign.center,
+                        TextEditingController speakerTEC = TextEditingController();
+                        TextEditingController capacityTEC = TextEditingController();
+
+                        if(dateTime.isAfter(dateNow)) {
+                          Scaffold.of(calendarContext).showBottomSheet((BuildContext bottomContext) {
+                            return Container(
+                              height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top,
+                              decoration: const BoxDecoration(
+                                color: Colors.transparent,
+                              ),
+                              child: Center(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: [
+                                    GlobalText(
+                                      content: DateFormat('dd MMMM yyyy').format(dateTime),
+                                      size: 20.0,
+                                      isBold: true,
+                                      padding: const GlobalPaddingClass(
+                                        paddingLeft: 50.0,
+                                        paddingRight: 50.0,
+                                      ),
+                                    ),
+                                    GlobalTextfield(
+                                      controller: speakerTEC,
+                                      title: 'Narasumber',
+                                      padding: const GlobalPaddingClass(
+                                        paddingLeft: 50.0,
+                                        paddingTop: 10.0,
+                                        paddingRight: 50.0,
+                                      ),
+                                    ),
+                                    GlobalTextfield(
+                                      controller: capacityTEC,
+                                      title: 'Kapasitas',
+                                      inputType: TextInputType.number,
+                                      padding: const GlobalPaddingClass(
+                                        paddingLeft: 50.0,
+                                        paddingTop: 10.0,
+                                        paddingRight: 50.0,
+                                      ),
+                                    ),
+                                    GlobalElevatedButton(
+                                      onPressed: () async {
+                                        GlobalRoute(context: context).back(null);
+                                      },
+                                      title: 'Simpan',
+                                      titleSize: 18.0,
+                                      btnColor: GlobalColor.defaultBlue,
+                                      padding: const GlobalPaddingClass(
+                                        paddingLeft: 40.0,
+                                        paddingTop: 20.0,
+                                        paddingRight: 40.0,
+                                        paddingBottom: 10.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Expanded(
-                                child: GlobalText(
-                                  content: DateFormat('dd/MM/yyyy').format(scheduleDataList[index].trainingDate),
-                                  align: TextAlign.center,
+                            );
+                          }, shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30.0,),
+                              topRight: Radius.circular(30.0,),
+                            ),
+                          ));
+                        } else {
+                          String speakerName = 'Mr. Speaker';
+                          int capacity = 30;
+
+                          Scaffold.of(calendarContext).showBottomSheet((BuildContext bottomContext) {
+                            return Container(
+                              height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top,
+                              decoration: const BoxDecoration(
+                                color: Colors.transparent,
+                              ),
+                              child: Center(
+                                child: ListView(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  children: [
+                                    GlobalText(
+                                      content: DateFormat('dd MMMM yyyy').format(dateTime),
+                                      size: 20.0,
+                                      isBold: true,
+                                      padding: const GlobalPaddingClass(
+                                        paddingLeft: 50.0,
+                                        paddingRight: 50.0,
+                                      ),
+                                    ),
+                                    GlobalText(
+                                      content: 'Narasumber: $speakerName',
+                                      padding: const GlobalPaddingClass(
+                                        paddingLeft: 50.0,
+                                        paddingTop: 10.0,
+                                        paddingRight: 50.0,
+                                      ),
+                                    ),
+                                    GlobalText(
+                                      content: 'Kapasitas: $capacity',
+                                      padding: const GlobalPaddingClass(
+                                        paddingLeft: 50.0,
+                                        paddingTop: 10.0,
+                                        paddingRight: 50.0,
+                                      ),
+                                    ),
+                                    GlobalElevatedButton(
+                                      onPressed: () async {
+                                        GlobalRoute(context: context).back(null);
+                                      },
+                                      title: 'Lihat Detail',
+                                      titleSize: 18.0,
+                                      btnColor: GlobalColor.defaultBlue,
+                                      padding: const GlobalPaddingClass(
+                                        paddingLeft: 40.0,
+                                        paddingTop: 20.0,
+                                        paddingRight: 40.0,
+                                        paddingBottom: 10.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              Expanded(
-                                child: GlobalText(
-                                  content: scheduleDataList[index].trainingTime,
-                                  align: TextAlign.center,
-                                ),
-                              ),
-                              const Icon(
-                                Icons.edit,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                            );
+                          }, shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30.0,),
+                              topRight: Radius.circular(30.0,),
+                            ),
+                          ));
+                        }
+                      },
                     );
                   },
-                ) :
-                Center(
-                  child: GlobalText(
-                    content: 'Daftar Tidak Tersedia...',
-                    size: 26.0,
-                    color: GlobalColor.defaultBlue,
-                  ),
                 ),
               ),
             ),
-            scheduleDataList.isNotEmpty ?
-            Builder(
-              builder: (BuildContext bottomContext) {
-                return GlobalElevatedButton(
-                  onPressed: () {
-                    Scaffold.of(bottomContext).showBottomSheet((BuildContext bottomSheetcontext) {
-                      return Container(
-                        height: MediaQuery.of(context).size.height - MediaQuery.of(context).viewPadding.top,
-                        decoration: BoxDecoration(
-                          color: GlobalColor.defaultWhite,
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30.0,),
-                            topRight: Radius.circular(30.0,),
-                          ),
-                        ),
-                        child: Center(
-                          child: ListView(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                              GlobalTextfield(
-                                controller: zoomLinkURLTEC,
-                                title: 'Zoom Meeting URL',
-                                capitalization: TextCapitalization.words,
-                                isBordered: true,
-                                padding: const GlobalPaddingClass(
-                                  paddingLeft: 20.0,
-                                  paddingRight: 20.0,
-                                  paddingTop: 20.0,
-                                ),
-                              ),
-                              GlobalPadding(
-                                paddingClass: const GlobalPaddingClass(
-                                  paddingLeft: 10.0,
-                                  paddingTop: 20.0,
-                                  paddingRight: 10.0,
-                                ),
-                                content: Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(50.0,),
-                                  ),
-                                  child: InkWell(
-                                    onTap: () {
-                                      showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime.now(),
-                                        lastDate: DateTime(2027),
-                                      ).then((DateTime? result) {
-                                        if(result != null) {
-                                          setState(() {
-                                            workshopDateTEC.text = DateFormat('dd/MM/yyyy').format(result);
-                                            workshopDateTime = result;
-                                          });
-                                        }
-                                      });
-                                    },
-                                    customBorder: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(50.0,),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(20.0,),
-                                      child: GlobalText(
-                                        content: workshopDateTime != null ? workshopDateTEC.text : 'Silahkan Pilih Tanggal',
-                                        align: TextAlign.start,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              GlobalTextfield(
-                                controller: workshopTimeTEC,
-                                title: 'Tempat Pelatihan',
-                                capitalization: TextCapitalization.words,
-                                isBordered: true,
-                                padding: const GlobalPaddingClass(
-                                  paddingLeft: 20.0,
-                                  paddingRight: 20.0,
-                                  paddingTop: 20.0,
-                                ),
-                              ),
-                              GlobalElevatedButton(
-                                onPressed: () {
-                                  GlobalRoute(context: context).back(null);
-                                },
-                                title: 'Simpan',
-                                padding: const GlobalPaddingClass(
-                                  paddingLeft: 20.0,
-                                  paddingTop: 20.0,
-                                  paddingRight: 20.0,
-                                  paddingBottom: 20.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    });
-                  },
-                  title: 'Tambah Data',
-                  padding: const GlobalPaddingClass(
-                    paddingTop: 20.0,
-                    paddingBottom: 20.0,
-                  ),
-                );
-              },
-            ) :
-            const Material(),
           ],
         ),
       ),
