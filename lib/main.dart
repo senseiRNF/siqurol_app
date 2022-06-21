@@ -3,8 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/screens/splash_screen.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  /*await Firebase.initializeApp().then((_) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]).then((_) {
+      runApp(const MainApp());
+    });
+  });*/
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

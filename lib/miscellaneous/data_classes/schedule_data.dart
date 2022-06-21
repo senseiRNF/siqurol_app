@@ -1,11 +1,15 @@
 class ScheduleData {
-  String zoomLink;
-  DateTime trainingDate;
-  String trainingTime;
+  String scheduleId;
+  DateTime date;
+  String hour;
+  String speaker;
+  int capacity;
 
   ScheduleData({
-    required this.zoomLink,
-    required this.trainingDate,
-    required this.trainingTime,
+    required this.scheduleId,
+    required this.date,
+    required this.hour,
+    required this.speaker,
+    required this.capacity,
   });
 }

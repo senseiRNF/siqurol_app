@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await SharedPref().readAuthorization().then((AuthData? auth) {
       if(auth != null) {
         setState(() {
-          userAccount.text = auth.username;
+          userAccount.text = auth.name;
           emailAccount.text = auth.email;
           phoneAccount.text = auth.phone;
           addressAccount.text = auth.address;
@@ -50,7 +50,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             const GlobalHeader(),
             Expanded(
-              child: ListView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0,),

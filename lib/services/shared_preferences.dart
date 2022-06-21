@@ -17,7 +17,7 @@ class SharedPref {
         [
           auth.userId,
           auth.email,
-          auth.username,
+          auth.name,
           auth.phone,
           auth.address,
           auth.role,
@@ -41,7 +41,7 @@ class SharedPref {
         result = AuthData(
           userId: stringList![0],
           email: stringList![1],
-          username: stringList![2],
+          name: stringList![2],
           phone: stringList![3],
           address: stringList![4],
           role: stringList![5],

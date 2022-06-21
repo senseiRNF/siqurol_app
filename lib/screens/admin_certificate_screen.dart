@@ -34,6 +34,7 @@ class _AdminCertificateScreenState extends State<AdminCertificateScreen> {
               align: TextAlign.center,
               padding: const GlobalPaddingClass(
                 paddingTop: 10.0,
+                paddingBottom: 10.0,
               ),
             ),
             Expanded(

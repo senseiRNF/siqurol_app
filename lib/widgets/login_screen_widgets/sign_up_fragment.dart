@@ -76,7 +76,7 @@ class SignUpFragment extends StatelessWidget {
             ),
             GlobalPasswordField(
               controller: confPassTEC,
-              title: 'Confirm Password',
+              title: 'Konfirmasi Password',
               padding: const GlobalPaddingClass(
                 paddingLeft: 50.0,
                 paddingRight: 50.0,
@@ -105,7 +105,7 @@ class SignUpFragment extends StatelessWidget {
                   AuthData(
                     userId: '1',
                     email: 'user.example.com',
-                    username: 'User',
+                    name: 'User',
                     phone: '0123456789',
                     address: 'Unknown Address',
                     role: 'user',

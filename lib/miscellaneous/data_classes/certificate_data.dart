@@ -1,9 +1,11 @@
 class CertificateData {
-  String participantName;
-  String certificateUrl;
+  String certificateId;
+  String scheduleId;
+  DateTime date;
 
   CertificateData({
-    required this.participantName,
-    required this.certificateUrl,
+    required this.certificateId,
+    required this.scheduleId,
+    required this.date,
   });
 }
