@@ -12,7 +12,12 @@ import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
 
 class AdminFormScheduleScreen extends StatefulWidget {
-  const AdminFormScheduleScreen({Key? key}) : super(key: key);
+  final TrainingData? trainingData;
+
+  const AdminFormScheduleScreen({
+    Key? key,
+    this.trainingData,
+  }) : super(key: key);
 
   @override
   State<AdminFormScheduleScreen> createState() => _AdminFormScheduleScreenState();
@@ -27,6 +32,24 @@ class _AdminFormScheduleScreenState extends State<AdminFormScheduleScreen> {
   @override
   void initState() {
     super.initState();
+
+    initLoad();
+  }
+
+  void initLoad() async {
+    if(widget.trainingData != null) {
+      setState(() {
+        speakerTEC.text = widget.trainingData!.speaker ?? '';
+
+        if(widget.trainingData!.date != null) {
+          selectedDateTime = widget.trainingData!.date!;
+        }
+
+        if(widget.trainingData!.hour != null) {
+          selectedHour = widget.trainingData!.hour!;
+        }
+      });
+    }
   }
 
   @override
@@ -126,21 +149,40 @@ class _AdminFormScheduleScreenState extends State<AdminFormScheduleScreen> {
                   ),
                   GlobalElevatedButton(
                     onPressed: () async {
-                      await LocalDB().writeTraining(
-                        TrainingData(
-                          date: selectedDateTime,
-                          hour: selectedHour,
-                          speaker: speakerTEC.text,
-                        ),
-                      ).then((result) {
-                        if(result) {
-                          GlobalRoute(context: context).back(true);
-                        } else {
-                          GlobalDialog(context: context, message: 'Gagal membuat jadwal, silahkan coba lagi').okDialog(() {
+                      if(widget.trainingData != null) {
+                        await LocalDB().updateTraining(
+                          TrainingData(
+                            scheduleId: widget.trainingData!.scheduleId,
+                            date: selectedDateTime,
+                            hour: selectedHour,
+                            speaker: speakerTEC.text,
+                          ),
+                        ).then((result) {
+                          if(result) {
+                            GlobalRoute(context: context).back(true);
+                          } else {
+                            GlobalDialog(context: context, message: 'Gagal membuat jadwal, silahkan coba lagi').okDialog(() {
 
-                          });
-                        }
-                      });
+                            });
+                          }
+                        });
+                      } else {
+                        await LocalDB().writeTraining(
+                          TrainingData(
+                            date: selectedDateTime,
+                            hour: selectedHour,
+                            speaker: speakerTEC.text,
+                          ),
+                        ).then((result) {
+                          if(result) {
+                            GlobalRoute(context: context).back(true);
+                          } else {
+                            GlobalDialog(context: context, message: 'Gagal membuat jadwal, silahkan coba lagi').okDialog(() {
+
+                            });
+                          }
+                        });
+                      }
                     },
                     title: 'Simpan',
                     padding: const GlobalPaddingClass(

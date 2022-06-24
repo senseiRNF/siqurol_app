@@ -4,6 +4,7 @@ import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/screens/admin_form_schedule_screen.dart';
+import 'package:siqurol_app/screens/admin_participant_training_screen.dart';
 import 'package:siqurol_app/services/local_db.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
@@ -17,7 +18,7 @@ class AdminScheduleScreen extends StatefulWidget {
 }
 
 class _AdminScheduleScreenState extends State<AdminScheduleScreen> {
-  List<TrainingData> scheduleList = [];
+  List<TrainingData> trainingList = [];
 
   @override
   void initState() {
@@ -29,7 +30,7 @@ class _AdminScheduleScreenState extends State<AdminScheduleScreen> {
   void initLoad() async {
     await LocalDB().readAllTraining().then((result) {
       setState(() {
-        scheduleList = result;
+        trainingList = result;
       });
     });
   }
@@ -53,51 +54,81 @@ class _AdminScheduleScreenState extends State<AdminScheduleScreen> {
               ),
             ),
             Expanded(
-              child: scheduleList.isNotEmpty ?
+              child: trainingList.isNotEmpty ?
               ListView.builder(
-                itemCount: scheduleList.length,
+                itemCount: trainingList.length,
                 itemBuilder: (BuildContext scheduleContext, int index) {
                   return Card(
-                    child: InkWell(
-                      onTap: () {
-
-                      },
-                      customBorder: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4.0,),
+                    child: GlobalPadding(
+                      paddingClass: const GlobalPaddingClass(
+                        paddingLeft: 10.0,
+                        paddingTop: 10.0,
+                        paddingRight: 10.0,
+                        paddingBottom: 10.0,
                       ),
-                      child: GlobalPadding(
-                        paddingClass: const GlobalPaddingClass(
-                          paddingLeft: 10.0,
-                          paddingTop: 10.0,
-                          paddingRight: 10.0,
-                          paddingBottom: 10.0,
-                        ),
-                        content: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            GlobalText(
-                              content: scheduleList[index].date != null ? DateFormat('dd/MM/yyyy').format(scheduleList[index].date!) : 'Tanggal Tak Diketahui',
-                              color: GlobalColor.defaultBlue,
-                              size: 18.0,
-                              isBold: true,
-                              padding: const GlobalPaddingClass(
-                                paddingBottom: 10.0,
+                      content: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: GlobalText(
+                                  content: trainingList[index].date != null ? DateFormat('dd/MM/yyyy').format(trainingList[index].date!) : 'Tanggal Tak Diketahui',
+                                  color: GlobalColor.defaultBlue,
+                                  size: 18.0,
+                                  isBold: true,
+                                  padding: const GlobalPaddingClass(
+                                    paddingBottom: 10.0,
+                                  ),
+                                ),
                               ),
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                GlobalText(
-                                  content: "Pembicara: ${scheduleList[index].speaker ?? 'Pembicara Tak Diketahui'}",
+                              InkWell(
+                                onTap: () {
+                                  GlobalRoute(context: context).moveTo(AdminParticipantTrainingScreen(trainingData: trainingList[index]), (callback) {
+                                    if(callback != null && callback) {
+                                      initLoad();
+                                    }
+                                  });
+                                },
+                                customBorder: const CircleBorder(),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0,),
+                                  child: Icon(
+                                    Icons.person_add,
+                                    color: GlobalColor.defaultBlue,
+                                  ),
                                 ),
-                                GlobalText(
-                                  content: "Jumlah Peserta: ${scheduleList[index].numberOfParticipant != null ? scheduleList[index].numberOfParticipant!.toString() : 'Jumlah Peserta Tak Diketahui'}",
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  GlobalRoute(context: context).moveTo(AdminFormScheduleScreen(
+                                    trainingData: trainingList[index],
+                                  ), (callback) {
+                                    if(callback != null && callback) {
+                                      initLoad();
+                                    }
+                                  });
+                                },
+                                customBorder: const CircleBorder(),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(10.0,),
+                                  child: Icon(
+                                    Icons.edit,
+                                  ),
                                 ),
-                              ],
-                            )
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              GlobalText(
+                                content: "Pembicara: ${trainingList[index].speaker ?? 'Pembicara Tak Diketahui'}",
+                              ),
+                            ],
+                          )
+                        ],
                       ),
                     ),
                   );

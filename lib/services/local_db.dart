@@ -162,6 +162,7 @@ class LocalDB {
           for(int i = 0; i < result.length; i++) {
             trainingList.add(
               TrainingData(
+                scheduleId: int.parse("${result[i]['id']}"),
                 date: result[i]['date'] != null && result[i]['date'] != '' ? DateTime.parse("${result[i]['date']}") : null,
                 hour: TimeOfDay.fromDateTime(DateTime.parse('2022-01-01 ${result[i]['hour']}')),
                 speaker: "${result[i]['speaker']}",
@@ -275,6 +276,26 @@ class LocalDB {
           user.phone,
           user.address,
           user.userId,
+        ],
+      ).then((_) {
+        result = true;
+      });
+    });
+
+    return result;
+  }
+
+  Future<bool> updateTraining(TrainingData training) async {
+    bool result = false;
+
+    await openDB().then((db) async {
+      await db.rawUpdate(
+        'UPDATE training SET date = ?, hour = ?, speaker = ? WHERE id = ?',
+        [
+          DateFormat('yyyy-MM-dd').format(training.date!),
+          DateFormat('HH:mm').format(DateTime(training.date!.year, training.date!.month, training.date!.day, training.hour!.hour, training.hour!.minute)),
+          training.speaker,
+          training.scheduleId,
         ],
       ).then((_) {
         result = true;
