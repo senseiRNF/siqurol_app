@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               MainMenuData(
                 imagePath: '${GlobalString.assetImagePath}/schedule_icon.png',
-                title: 'Jadwal Peserta',
+                title: 'Jadwal Kegiatan',
                 onPressed: () {
                   GlobalRoute(context: context).moveTo(const AdminScheduleScreen(), (callback) {
 
@@ -68,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               MainMenuData(
                 imagePath: '${GlobalString.assetImagePath}/certificate_icon.png',
-                title: 'Sertifikat Peserta',
+                title: 'Sertifikat',
                 onPressed: () {
                   GlobalRoute(context: context).moveTo(const AdminCertificateScreen(), (callback) {
 

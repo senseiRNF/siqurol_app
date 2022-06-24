@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:siqurol_app/miscellaneous/data_classes/schedule_data.dart';
+import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
@@ -13,7 +13,7 @@ class ScheduleScreen extends StatefulWidget {
 }
 
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  List<ScheduleData> scheduleList = [];
+  List<TrainingData> scheduleList = [];
 
   @override
   void initState() {

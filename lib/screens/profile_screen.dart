@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
+import 'package:siqurol_app/services/local_db.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
+import 'package:siqurol_app/widgets/global_input_field.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
@@ -17,11 +19,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool isEditing = false;
+
+  int? userId;
+
   TextEditingController userAccount = TextEditingController();
   TextEditingController phoneAccount = TextEditingController();
   TextEditingController addressAccount = TextEditingController();
 
   String? email;
+  String? role;
 
   @override
   void initState() {
@@ -34,10 +41,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await SharedPref().readAuthorization().then((AuthData? auth) {
       if(auth != null) {
         setState(() {
+          userId = auth.userId;
           userAccount.text = auth.name ?? 'Tak Diketahui';
           email = auth.email ?? 'Tak Diketahui';
           phoneAccount.text = auth.phone ?? 'Tak Diketahui';
           addressAccount.text = auth.address ?? 'Tak Diketahui';
+          role = auth.role ?? 'user';
         });
       }
     });
@@ -51,7 +60,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             const GlobalHeader(),
             Expanded(
-              child: Column(
+              child: isEditing ?
+              Center(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0,),
+                      child: GlobalTextfield(
+                        controller: userAccount,
+                        title: 'Nama',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0,),
+                      child: GlobalTextfield(
+                        controller: phoneAccount,
+                        title: 'No. Telp',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0,),
+                      child: GlobalTextfield(
+                        controller: addressAccount,
+                        title: 'Alamat',
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0,),
+                      child: GlobalElevatedButton(
+                        onPressed: () async {
+                          await LocalDB().updateUser(
+                            AuthData(
+                              userId: userId,
+                              name: userAccount.text,
+                              phone: phoneAccount.text,
+                              address: addressAccount.text,
+                            ),
+                          ).then((authResult) async {
+                            await SharedPref().writeAuthorization(
+                              AuthData(
+                                userId: userId,
+                                name: userAccount.text,
+                                phone: phoneAccount.text,
+                                address: addressAccount.text,
+                                email: email,
+                                role: role,
+                              ),
+                            ).then((writeAuth) {
+                              if(writeAuth) {
+                                setState(() {
+                                  isEditing = !isEditing;
+                                });
+                              }
+                            });
+                          });
+                        },
+                        title: 'Simpan Profile',
+                        padding: const GlobalPaddingClass(
+                          paddingTop: 20.0,
+                          paddingBottom: 10.0,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ) :
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -118,18 +193,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       content: phoneAccount.text,
                     ),
                   ),
+                  role != null && role == 'user' ?
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5.0,),
                     child: ProfileItem(
                       leadTitle: 'Alamat',
                       content: addressAccount.text,
                     ),
-                  ),
+                  ) :
+                  const Material(),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0,),
                     child: GlobalElevatedButton(
                       onPressed: () {
-
+                        setState(() {
+                          isEditing = !isEditing;
+                        });
                       },
                       title: 'Edit Profile',
                       padding: const GlobalPaddingClass(

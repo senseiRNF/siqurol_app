@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
+import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LocalDB {
@@ -80,9 +83,48 @@ class LocalDB {
     return [result, userId];
   }
 
+  Future<bool> writeTraining(TrainingData schedule) async {
+    bool result = false;
+
+    await openDB().then((db) async {
+      await db.rawInsert(
+        'INSERT INTO training (date, hour, participant, speaker) VALUES (?, ?, ?, ?)',
+        [
+          DateFormat('yyyy-MM-dd').format(schedule.date!),
+          DateFormat('HH:mm').format(DateTime(schedule.date!.year, schedule.date!.month, schedule.date!.day, schedule.hour!.hour, schedule.hour!.minute)),
+          0,
+          schedule.speaker,
+        ],
+      ).then((id) {
+        result = true;
+      });
+    });
+
+    return result;
+  }
+
+  Future<bool> writeTrainingParticipant(int trainingId, AuthData user) async {
+    bool result = false;
+
+    await openDB().then((db) async {
+      await db.rawInsert(
+        'INSERT INTO training_participant (trainingId, userId, certificate_status) VALUES (?, ?, ?)',
+        [
+          trainingId,
+          user.userId,
+          'Waiting',
+        ],
+      ).then((id) {
+        result = true;
+      });
+    });
+
+    return result;
+  }
+
   // READ
   Future<List<AuthData>> readAllUser() async {
-    List<AuthData> atuhList = [];
+    List<AuthData> authList = [];
 
     await openDB().then((db) async {
       await db.rawQuery(
@@ -90,7 +132,7 @@ class LocalDB {
       ).then((result) {
         if(result.isNotEmpty) {
           for(int i = 0; i < result.length; i++) {
-            atuhList.add(
+            authList.add(
               AuthData(
                 userId: int.parse("${result[i]['id']}"),
                 email: "${result[i]['email']}",
@@ -106,7 +148,32 @@ class LocalDB {
       });
     });
 
-    return atuhList;
+    return authList;
+  }
+
+  Future<List<TrainingData>> readAllTraining() async {
+    List<TrainingData> trainingList = [];
+
+    await openDB().then((db) async {
+      await db.rawQuery(
+        'SELECT * FROM training',
+      ).then((result) {
+        if(result.isNotEmpty) {
+          for(int i = 0; i < result.length; i++) {
+            trainingList.add(
+              TrainingData(
+                date: result[i]['date'] != null && result[i]['date'] != '' ? DateTime.parse("${result[i]['date']}") : null,
+                hour: TimeOfDay.fromDateTime(DateTime.parse('2022-01-01 ${result[i]['hour']}')),
+                speaker: "${result[i]['speaker']}",
+                numberOfParticipant: int.parse("${result[i]['participant']}"),
+              ),
+            );
+          }
+        }
+      });
+    });
+
+    return trainingList;
   }
 
   Future<List<AuthData>> readOnlyUserRole() async {
