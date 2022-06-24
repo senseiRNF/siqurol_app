@@ -26,9 +26,7 @@ class _SplashScreen extends State<SplashScreen> {
     await SharedPref().readAuthorization().then((AuthData? auth) {
       if(auth != null) {
         Future.delayed(const Duration(seconds: 2), () {
-          GlobalRoute(context: context).replaceWith(HomeScreen(
-            isAdmin: auth.role == 'admin' ? true : false,
-          ));
+          GlobalRoute(context: context).replaceWith(const HomeScreen());
         });
       } else {
         Future.delayed(const Duration(seconds: 2), () {

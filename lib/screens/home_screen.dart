@@ -17,12 +17,7 @@ import 'package:siqurol_app/widgets/global_header.dart';
 import 'package:siqurol_app/widgets/home_screen_widgets/home_main_menu.dart';
 
 class HomeScreen extends StatefulWidget {
-  final bool isAdmin;
-
-  const HomeScreen({
-    Key? key,
-    required this.isAdmin,
-  }) : super(key: key);
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -35,80 +30,88 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
-    if(widget.isAdmin) {
-      setState(() {
-        mainMenu = [
-          MainMenuData(
-            imagePath: '${GlobalString.assetImagePath}/profile_icon.png',
-            title: 'Profil',
-            onPressed: () {
-              GlobalRoute(context: context).moveTo(const ProfileScreen(), (callback) {
+    initLoad();
+  }
 
-              });
-            },
-          ),
-          MainMenuData(
-            imagePath: '${GlobalString.assetImagePath}/participant_icon.png',
-            title: 'Data Peserta',
-            onPressed: () {
-              GlobalRoute(context: context).moveTo(const AdminFormScreen(), (callback) {
+  void initLoad() async {
+    await SharedPref().readAuthorization().then((spAuth) {
+      if(spAuth != null && spAuth.role != null) {
+        if(spAuth.role == 'admin') {
+          setState(() {
+            mainMenu = [
+              MainMenuData(
+                imagePath: '${GlobalString.assetImagePath}/profile_icon.png',
+                title: 'Profil',
+                onPressed: () {
+                  GlobalRoute(context: context).moveTo(const ProfileScreen(), (callback) {
 
-              });
-            },
-          ),
-          MainMenuData(
-            imagePath: '${GlobalString.assetImagePath}/schedule_icon.png',
-            title: 'Jadwal Peserta',
-            onPressed: () {
-              GlobalRoute(context: context).moveTo(const AdminScheduleScreen(), (callback) {
+                  });
+                },
+              ),
+              MainMenuData(
+                imagePath: '${GlobalString.assetImagePath}/participant_icon.png',
+                title: 'Data Peserta',
+                onPressed: () {
+                  GlobalRoute(context: context).moveTo(const AdminFormScreen(), (callback) {
 
-              });
-            },
-          ),
-          MainMenuData(
-            imagePath: '${GlobalString.assetImagePath}/certificate_icon.png',
-            title: 'Sertifikat Peserta',
-            onPressed: () {
-              GlobalRoute(context: context).moveTo(const AdminCertificateScreen(), (callback) {
+                  });
+                },
+              ),
+              MainMenuData(
+                imagePath: '${GlobalString.assetImagePath}/schedule_icon.png',
+                title: 'Jadwal Peserta',
+                onPressed: () {
+                  GlobalRoute(context: context).moveTo(const AdminScheduleScreen(), (callback) {
 
-              });
-            },
-          ),
-        ];
-      });
-    } else {
-      setState(() {
-        mainMenu = [
-          MainMenuData(
-            imagePath: '${GlobalString.assetImagePath}/profile_icon.png',
-            title: 'Profil',
-            onPressed: () {
-              GlobalRoute(context: context).moveTo(const ProfileScreen(), (callback) {
+                  });
+                },
+              ),
+              MainMenuData(
+                imagePath: '${GlobalString.assetImagePath}/certificate_icon.png',
+                title: 'Sertifikat Peserta',
+                onPressed: () {
+                  GlobalRoute(context: context).moveTo(const AdminCertificateScreen(), (callback) {
 
-              });
-            },
-          ),
-          MainMenuData(
-            imagePath: '${GlobalString.assetImagePath}/schedule_icon.png',
-            title: 'Jadwal',
-            onPressed: () {
-              GlobalRoute(context: context).moveTo(const ScheduleScreen(), (callback) {
+                  });
+                },
+              ),
+            ];
+          });
+        } else {
+          setState(() {
+            mainMenu = [
+              MainMenuData(
+                imagePath: '${GlobalString.assetImagePath}/profile_icon.png',
+                title: 'Profil',
+                onPressed: () {
+                  GlobalRoute(context: context).moveTo(const ProfileScreen(), (callback) {
 
-              });
-            },
-          ),
-          MainMenuData(
-            imagePath: '${GlobalString.assetImagePath}/certificate_icon.png',
-            title: 'Sertifikat',
-            onPressed: () {
-              GlobalRoute(context: context).moveTo(const CertificateScreen(), (callback) {
+                  });
+                },
+              ),
+              MainMenuData(
+                imagePath: '${GlobalString.assetImagePath}/schedule_icon.png',
+                title: 'Jadwal',
+                onPressed: () {
+                  GlobalRoute(context: context).moveTo(const ScheduleScreen(), (callback) {
 
-              });
-            },
-          ),
-        ];
-      });
-    }
+                  });
+                },
+              ),
+              MainMenuData(
+                imagePath: '${GlobalString.assetImagePath}/certificate_icon.png',
+                title: 'Sertifikat',
+                onPressed: () {
+                  GlobalRoute(context: context).moveTo(const CertificateScreen(), (callback) {
+
+                  });
+                },
+              ),
+            ];
+          });
+        }
+      }
+    });
   }
 
   @override

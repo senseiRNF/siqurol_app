@@ -6,15 +6,7 @@ import 'package:siqurol_app/screens/splash_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  /*await Firebase.initializeApp().then((_) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]).then((_) {
-      runApp(const MainApp());
-    });
-  });*/
-
-  SystemChrome.setPreferredOrientations([
+  await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
     runApp(const MainApp());

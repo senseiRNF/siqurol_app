@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
+import 'package:siqurol_app/miscellaneous/functions/global_dialog.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/screens/home_screen.dart';
+import 'package:siqurol_app/services/local_db.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_input_field.dart';
@@ -72,37 +74,42 @@ class LoginFragment extends StatelessWidget {
             ),
             GlobalElevatedButton(
               onPressed: () async {
-                bool isAdmin = emailTEC.text == 'admin' ? true : false;
+                if(emailTEC.text != '' && passTEC.text != '') {
+                  await LocalDB().readLoginUser(emailTEC.text, passTEC.text).then((loginResult) async {
+                    if(loginResult != null) {
+                      await LocalDB().readLoginUser(emailTEC.text, passTEC.text).then((_) {
 
-                if(isAdmin) {
-                  await SharedPref().writeAuthorization(
-                    AuthData(
-                      userId: '0',
-                      email: 'admin.example.com',
-                      name: 'Admin',
-                      phone: '0123456789',
-                      address: 'Unknown Address',
-                      role: 'admin',
-                    ),
-                  );
+                      });
+                      await SharedPref().writeAuthorization(
+                        AuthData(
+                          userId: loginResult.userId,
+                          name: loginResult.name,
+                          phone: loginResult.phone,
+                          email: loginResult.email,
+                          password: loginResult.password,
+                          address: loginResult.address,
+                          role: loginResult.role,
+                        ),
+                      ).then((authResult) {
+                        if(authResult) {
+                          GlobalRoute(context: context).replaceWith(const HomeScreen());
+                        } else {
+                          GlobalDialog(context: context, message: 'Gagal masuk, silahkan periksa email atau password Anda, kemudian coba lagi').okDialog(() {
+
+                          });
+                        }
+                      });
+                    } else {
+                      GlobalDialog(context: context, message: 'Gagal masuk, silahkan periksa email atau password Anda, kemudian coba lagi').okDialog(() {
+
+                      });
+                    }
+                  });
                 } else {
-                  await SharedPref().writeAuthorization(
-                    AuthData(
-                      userId: '1',
-                      email: 'user.example.com',
-                      name: 'User',
-                      phone: '0123456789',
-                      address: 'Unknown Address',
-                      role: 'user',
-                    ),
-                  );
-                }
+                  GlobalDialog(context: context, message: 'Gagal masuk, silahkan periksa email atau password Anda, kemudian coba lagi').okDialog(() {
 
-                GlobalRoute(context: context).replaceWith(
-                  HomeScreen(
-                    isAdmin: isAdmin,
-                  ),
-                );
+                  });
+                }
               },
               title: 'Masuk',
               titleSize: 18.0,

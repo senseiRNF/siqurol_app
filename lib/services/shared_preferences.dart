@@ -15,12 +15,13 @@ class SharedPref {
       await sharedPrefs.setStringList(
         'AUTH',
         [
-          auth.userId,
-          auth.email,
-          auth.name,
-          auth.phone,
-          auth.address,
-          auth.role,
+          auth.userId.toString(),
+          auth.email ?? 'Tak Diketahui',
+          auth.password ?? 'Tak Diketahui',
+          auth.name ?? 'Tak Diketahui',
+          auth.phone ?? 'Tak Diketahui',
+          auth.address ?? 'Tak Diketahui',
+          auth.role ?? 'Tak Diketahui',
         ],
       ).then((_) {
         result = true;
@@ -39,12 +40,13 @@ class SharedPref {
 
       if(stringList != null && stringList!.isNotEmpty) {
         result = AuthData(
-          userId: stringList![0],
+          userId: int.parse(stringList![0]),
           email: stringList![1],
-          name: stringList![2],
-          phone: stringList![3],
-          address: stringList![4],
-          role: stringList![5],
+          password: stringList![2],
+          name: stringList![3],
+          phone: stringList![4],
+          address: stringList![5],
+          role: stringList![6],
         );
       }
     });

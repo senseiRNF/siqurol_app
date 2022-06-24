@@ -1,11 +1,11 @@
 class CertificateData {
-  String certificateId;
-  String scheduleId;
-  DateTime date;
+  int? certificateId;
+  int? scheduleId;
+  DateTime? date;
 
   CertificateData({
-    required this.certificateId,
-    required this.scheduleId,
-    required this.date,
+    this.certificateId,
+    this.scheduleId,
+    this.date,
   });
 }

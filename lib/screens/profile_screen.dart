@@ -18,9 +18,10 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   TextEditingController userAccount = TextEditingController();
-  TextEditingController emailAccount = TextEditingController();
   TextEditingController phoneAccount = TextEditingController();
   TextEditingController addressAccount = TextEditingController();
+
+  String? email;
 
   @override
   void initState() {
@@ -33,10 +34,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await SharedPref().readAuthorization().then((AuthData? auth) {
       if(auth != null) {
         setState(() {
-          userAccount.text = auth.name;
-          emailAccount.text = auth.email;
-          phoneAccount.text = auth.phone;
-          addressAccount.text = auth.address;
+          userAccount.text = auth.name ?? 'Tak Diketahui';
+          email = auth.email ?? 'Tak Diketahui';
+          phoneAccount.text = auth.phone ?? 'Tak Diketahui';
+          addressAccount.text = auth.address ?? 'Tak Diketahui';
         });
       }
     });
@@ -86,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 isBold: true,
                               ),
                               GlobalText(
-                                content: emailAccount.text,
+                                content: email ?? 'Tak Diketahui',
                                 size: 16.0,
                                 color: GlobalColor.defaultBlue,
                               ),
@@ -107,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5.0,),
                     child: ProfileItem(
                       leadTitle: 'Email',
-                      content: emailAccount.text,
+                      content: email ?? 'Tak Diketahui',
                     ),
                   ),
                   Padding(

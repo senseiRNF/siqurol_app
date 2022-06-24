@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
+import 'package:siqurol_app/miscellaneous/functions/global_dialog.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/screens/home_screen.dart';
+import 'package:siqurol_app/services/local_db.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_input_field.dart';
@@ -101,22 +103,49 @@ class SignUpFragment extends StatelessWidget {
             ),
             GlobalElevatedButton(
               onPressed: () async {
-                await SharedPref().writeAuthorization(
-                  AuthData(
-                    userId: '1',
-                    email: 'user.example.com',
-                    name: 'User',
-                    phone: '0123456789',
-                    address: 'Unknown Address',
-                    role: 'user',
-                  ),
-                );
+                if(passTEC.text == confPassTEC.text && nameTEC.text != '' && emailTEC.text != '' && passTEC.text != '' && phoneTEC.text != '' && addressTEC.text != '') {
+                  await LocalDB().writeUser(
+                    AuthData(
+                      name: nameTEC.text,
+                      email: emailTEC.text,
+                      password: passTEC.text,
+                      phone: phoneTEC.text,
+                      address: addressTEC.text,
+                      role: 'user',
+                    ),
+                  ).then((result) async {
+                    if(result[0]) {
+                      await SharedPref().writeAuthorization(
+                        AuthData(
+                          userId: result[1],
+                          email: emailTEC.text,
+                          name: nameTEC.text,
+                          phone: phoneTEC.text,
+                          address: addressTEC.text,
+                          role: 'user',
+                        ),
+                      ).then((authResult) {
+                        if(authResult) {
+                          GlobalRoute(context: context).replaceWith(
+                            const HomeScreen(),
+                          );
+                        } else {
+                          GlobalDialog(context: context, message: 'Gagal mendaftar, mohon periksa seluruh data Anda dan coba lagi').okDialog(() {
 
-                GlobalRoute(context: context).replaceWith(
-                  const HomeScreen(
-                    isAdmin: false,
-                  ),
-                );
+                          });
+                        }
+                      });
+                    } else {
+                      GlobalDialog(context: context, message: 'Gagal mendaftar, mohon periksa seluruh data Anda dan coba lagi').okDialog(() {
+
+                      });
+                    }
+                  });
+                } else {
+                  GlobalDialog(context: context, message: 'Gagal mendaftar, mohon periksa seluruh data Anda dan coba lagi').okDialog(() {
+
+                  });
+                }
               },
               title: 'Daftar',
               titleSize: 18.0,

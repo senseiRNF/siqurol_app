@@ -1,11 +1,11 @@
 class ParticipantData {
-  String participantId;
-  String userId;
-  String status;
+  String? participantId;
+  int? userId;
+  String? status;
 
   ParticipantData({
-    required this.participantId,
-    required this.userId,
-    required this.status,
+    this.participantId,
+    this.userId,
+    this.status,
   });
 }
