@@ -6,14 +6,14 @@ import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
 
-class AdminFormScreen extends StatefulWidget {
-  const AdminFormScreen({Key? key}) : super(key: key);
+class AdminParticipantScreen extends StatefulWidget {
+  const AdminParticipantScreen({Key? key}) : super(key: key);
 
   @override
-  State<AdminFormScreen> createState() => _AdminFormScreenState();
+  State<AdminParticipantScreen> createState() => _AdminParticipantScreenState();
 }
 
-class _AdminFormScreenState extends State<AdminFormScreen> {
+class _AdminParticipantScreenState extends State<AdminParticipantScreen> {
   List<AuthData> participantList = [];
 
   @override
@@ -57,7 +57,7 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
                   return Card(
                     child: ListTile(
                       title: GlobalText(
-                        content: participantList[index].name ?? 'Unknown Name',
+                        content: participantList[index].name ?? 'Nama Tak Diketahui',
                         color: GlobalColor.defaultBlue,
                         size: 18.0,
                         isBold: true,
@@ -72,13 +72,13 @@ class _AdminFormScreenState extends State<AdminFormScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             GlobalText(
-                              content: participantList[index].email ?? 'Unknown Email',
+                              content: participantList[index].email ?? 'Email Tak Diketahui',
                             ),
                             GlobalText(
-                              content: participantList[index].phone ?? 'Unknown Phone',
+                              content: participantList[index].phone ?? 'Telepon Tak Diketahui',
                             ),
                             GlobalText(
-                              content: participantList[index].address ?? 'Unknown Address',
+                              content: participantList[index].address ?? 'Alamt Tak Diketahui',
                             ),
                           ],
                         ),

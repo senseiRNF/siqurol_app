@@ -108,7 +108,7 @@ class LocalDB {
 
     await openDB().then((db) async {
       await db.rawInsert(
-        'INSERT INTO training_participant (trainingId, userId, certificate_status) VALUES (?, ?, ?)',
+        'INSERT INTO training_participant (training_id, user_id, certificate_status) VALUES (?, ?, ?)',
         [
           trainingId,
           user.userId,
@@ -262,6 +262,33 @@ class LocalDB {
     });
 
     return user;
+  }
+
+  Future<List<AuthData>> readTrainingParticipant(int trainingId) async {
+    List<AuthData> participant = [];
+
+    await openDB().then((db) async {
+      await db.rawQuery(
+        'SELECT u.id, u.name, u.email FROM user u, training_participant tp WHERE tp.training_id = ? AND tp.user_id = u.id',
+        [
+          trainingId,
+        ],
+      ).then((result) {
+        if(result.isNotEmpty) {
+          for(int i = 0; i < result.length; i++) {
+            participant.add(
+              AuthData(
+                userId: int.parse("${result[i]['id']}"),
+                name: "${result[i]['name']}",
+                email: "${result[i]['email']}",
+              ),
+            );
+          }
+        }
+      });
+    });
+
+    return participant;
   }
 
   // UPDATE

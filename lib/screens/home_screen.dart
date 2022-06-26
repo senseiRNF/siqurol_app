@@ -9,7 +9,7 @@ import 'package:siqurol_app/screens/certificate_screen.dart';
 import 'package:siqurol_app/screens/profile_screen.dart';
 import 'package:siqurol_app/screens/schedule_screen.dart';
 import 'package:siqurol_app/screens/splash_screen.dart';
-import 'package:siqurol_app/screens/admin_form_screen.dart';
+import 'package:siqurol_app/screens/admin_participant_screen.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 imagePath: '${GlobalString.assetImagePath}/participant_icon.png',
                 title: 'Data Peserta',
                 onPressed: () {
-                  GlobalRoute(context: context).moveTo(const AdminFormScreen(), (callback) {
+                  GlobalRoute(context: context).moveTo(const AdminParticipantScreen(), (callback) {
 
                   });
                 },

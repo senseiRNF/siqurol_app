@@ -79,13 +79,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         title: 'No. Telp',
                       ),
                     ),
+                    role != 'admin' ?
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0,),
                       child: GlobalTextfield(
                         controller: addressAccount,
                         title: 'Alamat',
                       ),
-                    ),
+                    ) :
+                    const Material(),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0,),
                       child: GlobalElevatedButton(
