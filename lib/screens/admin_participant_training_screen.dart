@@ -41,7 +41,7 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
           for(int i = 0; i < participant.length; i++) {
             tempTrainingParticipantList.add(
               TrainingParticipantData(
-                participant: participant[i],
+                auth: participant[i],
                 isChecked: false,
               ),
             );
@@ -51,7 +51,7 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
             for(int k = 0; k < tpList.length; k++) {
               if(participant[j].userId == tpList[k].userId) {
                 tempTrainingParticipantList[j] = TrainingParticipantData(
-                  participant: participant[j],
+                  auth: participant[j],
                   isChecked: true,
                 );
               }
@@ -69,7 +69,7 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
           for(int i = 0; i < participant.length; i++) {
             tempTrainingParticipantList.add(
               TrainingParticipantData(
-                participant: participant[i],
+                auth: participant[i],
                 isChecked: false,
               ),
             );
@@ -125,12 +125,12 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
                         },
                         value: trainingParticipantList[index].isChecked,
                         title: GlobalText(
-                          content: trainingParticipantList[index].participant.name ?? 'Nama Tak Diketahui',
+                          content: trainingParticipantList[index].auth.name ?? 'Nama Tak Diketahui',
                           size: 18.0,
                           isBold: true,
                         ),
                         subtitle: GlobalText(
-                          content: trainingParticipantList[index].participant.email ?? 'Email Tak Diketahui',
+                          content: trainingParticipantList[index].auth.email ?? 'Email Tak Diketahui',
                         ),
                       ),
                     ),
@@ -159,7 +159,7 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
                     if(trainingParticipantList[i].isChecked) {
                       await LocalDB().writeTrainingParticipant(
                         widget.trainingData.scheduleId!,
-                        trainingParticipantList[i].participant,
+                        trainingParticipantList[i].auth,
                       );
                     }
 

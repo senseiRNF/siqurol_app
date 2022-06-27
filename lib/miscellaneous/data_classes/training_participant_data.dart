@@ -1,11 +1,12 @@
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
+import 'package:siqurol_app/miscellaneous/data_classes/participant_data.dart';
 
 class TrainingParticipantData {
-  AuthData participant;
+  AuthData auth;
   bool isChecked;
 
   TrainingParticipantData({
-    required this.participant,
+    required this.auth,
     required this.isChecked,
   });
 }

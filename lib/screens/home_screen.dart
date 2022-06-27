@@ -6,6 +6,7 @@ import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/screens/admin_certificate_screen.dart';
 import 'package:siqurol_app/screens/admin_schedule_screen.dart';
 import 'package:siqurol_app/screens/certificate_screen.dart';
+import 'package:siqurol_app/screens/help_screen.dart';
 import 'package:siqurol_app/screens/profile_screen.dart';
 import 'package:siqurol_app/screens/schedule_screen.dart';
 import 'package:siqurol_app/screens/splash_screen.dart';
@@ -103,6 +104,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: 'Sertifikat',
                 onPressed: () {
                   GlobalRoute(context: context).moveTo(const CertificateScreen(), (callback) {
+
+                  });
+                },
+              ),
+              MainMenuData(
+                imagePath: 'help icon',
+                title: 'Panduan Pengguna',
+                onPressed: () {
+                  GlobalRoute(context: context).moveTo(const HelpScreen(), (callback) {
 
                   });
                 },

@@ -291,6 +291,32 @@ class LocalDB {
     return participant;
   }
 
+  Future<List<TrainingData>> readTrainingByUser(int userId) async {
+    List<TrainingData> trainingList = [];
+
+    await openDB().then((db) async {
+      await db.rawQuery(
+        'SELECT t.* FROM training t, training_participant tp WHERE tp.user_id = ? AND tp.training_id = t.id',
+      ).then((result) {
+        if(result.isNotEmpty) {
+          for(int i = 0; i < result.length; i++) {
+            trainingList.add(
+              TrainingData(
+                scheduleId: int.parse("${result[i]['id']}"),
+                date: result[i]['date'] != null && result[i]['date'] != '' ? DateTime.parse("${result[i]['date']}") : null,
+                hour: TimeOfDay.fromDateTime(DateTime.parse('2022-01-01 ${result[i]['hour']}')),
+                speaker: "${result[i]['speaker']}",
+                numberOfParticipant: int.parse("${result[i]['participant']}"),
+              ),
+            );
+          }
+        }
+      });
+    });
+
+    return trainingList;
+  }
+
   // UPDATE
   Future<bool> updateUser(AuthData user) async {
     bool result = false;

@@ -36,9 +36,15 @@ class HomeMainMenu extends StatelessWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(20.0,),
-                  child: Image.asset(
+                  child: mainMenu.imagePath != 'help icon' ?
+                  Image.asset(
                     mainMenu.imagePath,
                     fit: BoxFit.contain,
+                  ) :
+                  const Icon(
+                    Icons.help_outline,
+                    size: 80.0,
+                    color: Colors.lightBlue,
                   ),
                 ),
               ),
