@@ -297,6 +297,9 @@ class LocalDB {
     await openDB().then((db) async {
       await db.rawQuery(
         'SELECT t.* FROM training t, training_participant tp WHERE tp.user_id = ? AND tp.training_id = t.id',
+        [
+          userId,
+        ],
       ).then((result) {
         if(result.isNotEmpty) {
           for(int i = 0; i < result.length; i++) {
@@ -351,6 +354,25 @@ class LocalDB {
           training.scheduleId,
         ],
       ).then((_) {
+        result = true;
+      });
+    });
+
+    return result;
+  }
+
+  // DELETE
+  Future<bool> deleteTrainingParticipant(int trainingId, AuthData user) async {
+    bool result = false;
+
+    await openDB().then((db) async {
+      await db.rawInsert(
+        'DELETE FROM training_participant WHERE training_id = ? AND user_id = ?',
+        [
+          trainingId,
+          user.userId,
+        ],
+      ).then((id) {
         result = true;
       });
     });

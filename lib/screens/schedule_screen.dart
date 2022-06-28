@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
+import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
+import 'package:siqurol_app/screens/detail_schedule_screen.dart';
 import 'package:siqurol_app/services/local_db.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
@@ -17,6 +20,8 @@ class ScheduleScreen extends StatefulWidget {
 class _ScheduleScreenState extends State<ScheduleScreen> {
   List<TrainingData> scheduleList = [];
 
+  String? username;
+
   @override
   void initState() {
     super.initState();
@@ -27,8 +32,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   void initLoad() async {
     await SharedPref().readAuthorization().then((auth) async {
       if(auth != null && auth.userId != null) {
-        await LocalDB().readTrainingByUser(auth.userId!).then((result) async {
+        setState(() {
+          username = auth.name;
+        });
 
+        await LocalDB().readTrainingByUser(auth.userId!).then((result) async {
+          setState(() {
+            scheduleList = result;
+          });
         });
       }
     });
@@ -54,8 +65,56 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             ),
             Expanded(
               child: scheduleList.isNotEmpty ?
-              ListView(
+              ListView.builder(
+                itemCount: scheduleList.length,
+                itemBuilder: (BuildContext listContext, int index) {
+                  return Card(
+                    child: InkWell(
+                      onTap: () {
+                        GlobalRoute(context: context).moveTo(DetailScheduleScreen(
+                          trainingData: scheduleList[index],
+                          username: username!,
+                        ), (callback) {
 
+                        });
+                      },
+                      customBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4.0,),
+                      ),
+                      child: GlobalPadding(
+                        paddingClass: const GlobalPaddingClass(
+                          paddingLeft: 10.0,
+                          paddingTop: 10.0,
+                          paddingRight: 10.0,
+                          paddingBottom: 10.0,
+                        ),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            GlobalText(
+                              content: "Tanggal: ${scheduleList[index].date != null ? DateFormat('dd/MM/yyyy').format(scheduleList[index].date!) : 'Tanggal Tak Diketahui'}",
+                              color: GlobalColor.defaultBlue,
+                              size: 18.0,
+                              isBold: true,
+                            ),
+                            GlobalText(
+                              content: "Jam: ${scheduleList[index].hour != null ? DateFormat('HH:mm').format(DateTime(scheduleList[index].date!.year, scheduleList[index].date!.month, scheduleList[index].date!.day, scheduleList[index].hour!.hour, scheduleList[index].hour!.minute)) : 'Waktu Tak Diketahui'}",
+                              color: GlobalColor.defaultBlue,
+                              size: 18.0,
+                              isBold: true,
+                              padding: const GlobalPaddingClass(
+                                paddingBottom: 10.0,
+                              ),
+                            ),
+                            GlobalText(
+                              content: "Pembicara: ${scheduleList[index].speaker ?? 'Pembicara Tak Diketahui'}",
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ) :
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/training_participant_data.dart';
-import 'package:siqurol_app/miscellaneous/functions/global_dialog.dart';
-import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/services/local_db.dart';
-import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
@@ -116,8 +113,20 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
                         paddingBottom: 10.0,
                       ),
                       content: CheckboxListTile(
-                        onChanged: (checked) {
+                        onChanged: (checked) async {
                           bool changed = trainingParticipantList[index].isChecked;
+
+                          if(checked!) {
+                            await LocalDB().writeTrainingParticipant(
+                              widget.trainingData.scheduleId!,
+                              trainingParticipantList[index].auth,
+                            );
+                          } else {
+                            await LocalDB().deleteTrainingParticipant(
+                              widget.trainingData.scheduleId!,
+                              trainingParticipantList[index].auth,
+                            );
+                          }
 
                           setState(() {
                             trainingParticipantList[index].isChecked = !changed;
@@ -149,33 +158,6 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
                     align: TextAlign.center,
                   ),
                 ],
-              ),
-            ),
-            GlobalElevatedButton(
-              title: 'Simpan',
-              onPressed: () {
-                GlobalDialog(context: context, message: 'Simpan data, Anda yakin?').optionDialog(() async {
-                  for(int i = 0; i < trainingParticipantList.length; i++) {
-                    if(trainingParticipantList[i].isChecked) {
-                      await LocalDB().writeTrainingParticipant(
-                        widget.trainingData.scheduleId!,
-                        trainingParticipantList[i].auth,
-                      );
-                    }
-
-                    if(i == trainingParticipantList.length - 1) {
-                      GlobalRoute(context: context).back(true);
-                    }
-                  }
-                }, () {
-
-                });
-              },
-              padding: const GlobalPaddingClass(
-                paddingLeft: 10.0,
-                paddingTop: 10.0,
-                paddingRight: 10.0,
-                paddingBottom: 10.0,
               ),
             ),
           ],
