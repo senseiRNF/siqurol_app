@@ -93,7 +93,7 @@ class SignUpFragment extends StatelessWidget {
                 paddingRight: 50.0,
               ),
             ),
-            GlobalTextFormField(
+            GlobalTextfield(
               controller: addressTEC,
               title: 'Alamat',
               padding: const GlobalPaddingClass(

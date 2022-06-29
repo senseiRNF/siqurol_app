@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
+import 'package:siqurol_app/miscellaneous/data_classes/training_participant_data.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LocalDB {
@@ -64,19 +65,50 @@ class LocalDB {
     int? userId;
 
     await openDB().then((db) async {
-      await db.rawInsert(
-        'INSERT INTO user (name, phone, email, address, pass, role) VALUES (?, ?, ?, ?, ?, ?)',
-        [
-          auth.name,
-          auth.phone,
-          auth.email,
-          auth.address,
-          auth.password,
-          auth.role,
-        ],
-      ).then((id) {
-        result = true;
-        userId = id;
+      await readAllUser().then((user) async {
+        if(user.isNotEmpty) {
+          bool isDuplicate = false;
+
+          for(int i = 0; i < user.length; i++) {
+            if(auth.userId == user[i].userId) {
+              isDuplicate = true;
+
+              break;
+            }
+          }
+
+          if(!isDuplicate) {
+            await db.rawInsert(
+              'INSERT INTO user (name, phone, email, address, pass, role) VALUES (?, ?, ?, ?, ?, ?)',
+              [
+                auth.name,
+                auth.phone,
+                auth.email,
+                auth.address,
+                auth.password,
+                auth.role,
+              ],
+            ).then((id) {
+              result = true;
+              userId = id;
+            });
+          }
+        } else {
+          await db.rawInsert(
+            'INSERT INTO user (name, phone, email, address, pass, role) VALUES (?, ?, ?, ?, ?, ?)',
+            [
+              auth.name,
+              auth.phone,
+              auth.email,
+              auth.address,
+              auth.password,
+              auth.role,
+            ],
+          ).then((id) {
+            result = true;
+            userId = id;
+          });
+        }
       });
     });
 
@@ -112,7 +144,7 @@ class LocalDB {
         [
           trainingId,
           user.userId,
-          'Waiting',
+          'detained',
         ],
       ).then((id) {
         result = true;
@@ -264,12 +296,12 @@ class LocalDB {
     return user;
   }
 
-  Future<List<AuthData>> readTrainingParticipant(int trainingId) async {
-    List<AuthData> participant = [];
+  Future<List<TrainingParticipantData>> readTrainingParticipant(int trainingId) async {
+    List<TrainingParticipantData> participant = [];
 
     await openDB().then((db) async {
       await db.rawQuery(
-        'SELECT u.id, u.name, u.email FROM user u, training_participant tp WHERE tp.training_id = ? AND tp.user_id = u.id',
+        'SELECT u.id, u.name, u.email, tp.certificate_status FROM user u, training_participant tp WHERE tp.training_id = ? AND tp.user_id = u.id',
         [
           trainingId,
         ],
@@ -277,10 +309,13 @@ class LocalDB {
         if(result.isNotEmpty) {
           for(int i = 0; i < result.length; i++) {
             participant.add(
-              AuthData(
-                userId: int.parse("${result[i]['id']}"),
-                name: "${result[i]['name']}",
-                email: "${result[i]['email']}",
+              TrainingParticipantData(
+                auth: AuthData(
+                  userId: int.parse("${result[i]['id']}"),
+                  name: "${result[i]['name']}",
+                  email: "${result[i]['email']}",
+                ),
+                isChecked: result[i]['certificate_status'] == 'received' ? true : false,
               ),
             );
           }
@@ -354,6 +389,25 @@ class LocalDB {
           training.scheduleId,
         ],
       ).then((_) {
+        result = true;
+      });
+    });
+
+    return result;
+  }
+
+  Future<bool> updateCertificateParticipant(String status, int trainingId, AuthData user) async {
+    bool result = false;
+
+    await openDB().then((db) async {
+      await db.rawInsert(
+        'UPDATE training_participant SET certificate_status = ? WHERE training_id = ? AND user_id = ?',
+        [
+          status,
+          trainingId,
+          user.userId,
+        ],
+      ).then((id) {
         result = true;
       });
     });

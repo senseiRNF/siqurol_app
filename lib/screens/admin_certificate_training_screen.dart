@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
+import 'package:siqurol_app/miscellaneous/data_classes/training_participant_data.dart';
+import 'package:siqurol_app/miscellaneous/functions/global_dialog.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/services/local_db.dart';
-import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
@@ -22,8 +22,7 @@ class AdminCertificateTrainingScreen extends StatefulWidget {
 }
 
 class _AdminCertificateTrainingScreenState extends State<AdminCertificateTrainingScreen> {
-  List<AuthData> participantList = [];
-  List<bool> isChecked = [];
+  List<TrainingParticipantData> participantList = [];
 
   @override
   void initState() {
@@ -33,18 +32,33 @@ class _AdminCertificateTrainingScreenState extends State<AdminCertificateTrainin
   }
 
   void initLoad() async {
-    setState(() {
-      isChecked = [];
-    });
+    await LocalDB().readTrainingParticipant(widget.trainingData.scheduleId!).then((tpList) async {
+      if(tpList.isNotEmpty) {
+        await LocalDB().readOnlyUserRole().then((participant) {
+          List<TrainingParticipantData> tempParticipantList = [];
 
-    await LocalDB().readOnlyUserRole().then((participant) {
-      setState(() {
-        participantList = participant;
+          for(int j = 0; j < participant.length; j++) {
+            for(int k = 0; k < tpList.length; k++) {
+              if(participant[j].userId == tpList[k].auth.userId) {
+                tempParticipantList.add(
+                  TrainingParticipantData(
+                    auth: participant[j],
+                    isChecked: tpList[k].isChecked,
+                  ),
+                );
+              }
+            }
+          }
 
-        for(int i = 0; i < participantList.length; i++) {
-          isChecked.add(false);
-        }
-      });
+          setState(() {
+            participantList = tempParticipantList;
+          });
+        });
+      } else {
+        GlobalDialog(context: context, message: 'Belum ada peserta terdaftar di acara ini').okDialog(() {
+          GlobalRoute(context: context).back(null);
+        });
+      }
     });
   }
 
@@ -57,7 +71,7 @@ class _AdminCertificateTrainingScreenState extends State<AdminCertificateTrainin
           children: [
             const GlobalHeader(),
             GlobalText(
-              content: 'Daftar Peserta Kegiatan',
+              content: 'Daftar Penyerahan Sertifikat',
               size: 26.0,
               color: GlobalColor.defaultBlue,
               isBold: true,
@@ -81,14 +95,35 @@ class _AdminCertificateTrainingScreenState extends State<AdminCertificateTrainin
                         paddingBottom: 10.0,
                       ),
                       content: CheckboxListTile(
-                        onChanged: (checked) {
+                        onChanged: (checked) async {
+                          bool changed = participantList[index].isChecked;
+
+                          if(checked!) {
+                            await LocalDB().updateCertificateParticipant(
+                              'received',
+                              widget.trainingData.scheduleId!,
+                              participantList[index].auth,
+                            );
+                          } else {
+                            await LocalDB().updateCertificateParticipant(
+                              'detained',
+                              widget.trainingData.scheduleId!,
+                              participantList[index].auth,
+                            );
+                          }
+
                           setState(() {
-                            isChecked[index] = !isChecked[index];
+                            participantList[index].isChecked = !changed;
                           });
                         },
-                        value: isChecked[index],
+                        value: participantList[index].isChecked,
                         title: GlobalText(
-                          content: participantList[index].name ?? 'Nama Tak Diketahui',
+                          content: participantList[index].auth.name ?? 'Nama Tak Diketahui',
+                          size: 18.0,
+                          isBold: true,
+                        ),
+                        subtitle: GlobalText(
+                          content: participantList[index].auth.email ?? 'Email Tak Diketahui',
                         ),
                       ),
                     ),
@@ -107,18 +142,6 @@ class _AdminCertificateTrainingScreenState extends State<AdminCertificateTrainin
                     align: TextAlign.center,
                   ),
                 ],
-              ),
-            ),
-            GlobalElevatedButton(
-              title: 'Simpan',
-              onPressed: () {
-                GlobalRoute(context: context).back(null);
-              },
-              padding: const GlobalPaddingClass(
-                paddingLeft: 10.0,
-                paddingTop: 10.0,
-                paddingRight: 10.0,
-                paddingBottom: 10.0,
               ),
             ),
           ],

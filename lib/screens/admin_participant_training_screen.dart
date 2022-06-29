@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/training_participant_data.dart';
+import 'package:siqurol_app/miscellaneous/functions/global_dialog.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/services/local_db.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
@@ -46,7 +47,7 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
 
           for(int j = 0; j < participant.length; j++) {
             for(int k = 0; k < tpList.length; k++) {
-              if(participant[j].userId == tpList[k].userId) {
+              if(participant[j].userId == tpList[k].auth.userId) {
                 tempTrainingParticipantList[j] = TrainingParticipantData(
                   auth: participant[j],
                   isChecked: true,
@@ -122,10 +123,22 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
                               trainingParticipantList[index].auth,
                             );
                           } else {
-                            await LocalDB().deleteTrainingParticipant(
-                              widget.trainingData.scheduleId!,
-                              trainingParticipantList[index].auth,
-                            );
+                            await LocalDB().readTrainingParticipant(widget.trainingData.scheduleId!).then((checkCertificate) async {
+                              for(int i = 0; i < checkCertificate.length; i++) {
+                                if(trainingParticipantList[index].auth.userId == checkCertificate[i].auth.userId) {
+                                  if(checkCertificate[i].isChecked) {
+                                    GlobalDialog(context: context, message: 'Tidak dapat menghapus peserta, sertifikat sudah diserahkan').okDialog(() {
+
+                                    });
+                                  } else {
+                                    await LocalDB().deleteTrainingParticipant(
+                                      widget.trainingData.scheduleId!,
+                                      trainingParticipantList[index].auth,
+                                    );
+                                  }
+                                }
+                              }
+                            });
                           }
 
                           setState(() {
