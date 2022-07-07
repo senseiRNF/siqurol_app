@@ -5,6 +5,7 @@ import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/screens/home_screen.dart';
+import 'package:siqurol_app/services/api_services/auth_services.dart';
 import 'package:siqurol_app/services/local_db.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
@@ -104,42 +105,29 @@ class SignUpFragment extends StatelessWidget {
             GlobalElevatedButton(
               onPressed: () async {
                 if(passTEC.text == confPassTEC.text && nameTEC.text != '' && emailTEC.text != '' && passTEC.text != '' && phoneTEC.text != '' && addressTEC.text != '') {
-                  await LocalDB().writeUser(
-                    AuthData(
-                      name: nameTEC.text,
-                      email: emailTEC.text,
-                      password: passTEC.text,
-                      phone: phoneTEC.text,
-                      address: addressTEC.text,
-                      role: 'user',
-                    ),
-                  ).then((result) async {
-                    if(result[0]) {
-                      await SharedPref().writeAuthorization(
-                        AuthData(
-                          userId: result[1],
-                          email: emailTEC.text,
-                          name: nameTEC.text,
-                          phone: phoneTEC.text,
-                          address: addressTEC.text,
-                          role: 'user',
-                        ),
-                      ).then((authResult) {
-                        if(authResult) {
-                          GlobalRoute(context: context).replaceWith(
-                            const HomeScreen(),
-                          );
-                        } else {
-                          GlobalDialog(context: context, message: 'Gagal mendaftar, mohon periksa seluruh data Anda dan coba lagi').okDialog(() {
+                  GlobalDialog(context: context, message: 'Mendaftarkan data, pastikan data Anda sudah terisi dan benar, Lanjutkan?').optionDialog(() async {
+                    await AuthServices().createUser(
+                      AuthData(
+                        name: nameTEC.text,
+                        email: emailTEC.text,
+                        password: passTEC.text,
+                        phone: phoneTEC.text,
+                        address: addressTEC.text,
+                        role: 'user',
+                      ),
+                    ).then((result) async {
+                      if(result) {
+                        GlobalRoute(context: context).replaceWith(
+                          const HomeScreen(),
+                        );
+                      } else {
+                        GlobalDialog(context: context, message: 'Gagal mendaftar, mohon periksa seluruh data Anda dan coba lagi').okDialog(() {
 
-                          });
-                        }
-                      });
-                    } else {
-                      GlobalDialog(context: context, message: 'Gagal mendaftar, mohon periksa seluruh data Anda dan coba lagi').okDialog(() {
+                        });
+                      }
+                    });
+                  }, () {
 
-                      });
-                    }
                   });
                 } else {
                   GlobalDialog(context: context, message: 'Gagal mendaftar, mohon periksa seluruh data Anda dan coba lagi').okDialog(() {
