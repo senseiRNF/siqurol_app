@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
@@ -60,81 +59,6 @@ class LocalDB {
   }
 
   // WRITE
-  Future<List> writeUser(AuthData auth) async {
-    bool result = false;
-    int? userId;
-
-    await openDB().then((db) async {
-      await readAllUser().then((user) async {
-        if(user.isNotEmpty) {
-          bool isDuplicate = false;
-
-          for(int i = 0; i < user.length; i++) {
-            if(auth.userId == user[i].userId) {
-              isDuplicate = true;
-
-              break;
-            }
-          }
-
-          if(!isDuplicate) {
-            await db.rawInsert(
-              'INSERT INTO user (name, phone, email, address, pass, role) VALUES (?, ?, ?, ?, ?, ?)',
-              [
-                auth.name,
-                auth.phone,
-                auth.email,
-                auth.address,
-                auth.password,
-                auth.role,
-              ],
-            ).then((id) {
-              result = true;
-              userId = id;
-            });
-          }
-        } else {
-          await db.rawInsert(
-            'INSERT INTO user (name, phone, email, address, pass, role) VALUES (?, ?, ?, ?, ?, ?)',
-            [
-              auth.name,
-              auth.phone,
-              auth.email,
-              auth.address,
-              auth.password,
-              auth.role,
-            ],
-          ).then((id) {
-            result = true;
-            userId = id;
-          });
-        }
-      });
-    });
-
-    return [result, userId];
-  }
-
-  Future<bool> writeTraining(TrainingData schedule) async {
-    bool result = false;
-
-    await openDB().then((db) async {
-      await db.rawInsert(
-        'INSERT INTO training (date, hour, participant, speaker) VALUES (?, ?, ?, ?)',
-        [
-          DateFormat('yyyy-MM-dd').format(schedule.date!),
-          DateFormat('HH:mm').format(DateTime(schedule.date!.year, schedule.date!.month, schedule.date!.day, schedule.hour!.hour, schedule.hour!.minute)),
-          0,
-          schedule.speaker,
-        ],
-      ).then((id) {
-        result = true;
-      });
-    });
-
-    return result;
-  }
-
   Future<bool> writeTrainingParticipant(int trainingId, AuthData user) async {
     bool result = false;
 
@@ -155,60 +79,6 @@ class LocalDB {
   }
 
   // READ
-  Future<List<AuthData>> readAllUser() async {
-    List<AuthData> authList = [];
-
-    await openDB().then((db) async {
-      await db.rawQuery(
-        'SELECT * FROM user',
-      ).then((result) {
-        if(result.isNotEmpty) {
-          for(int i = 0; i < result.length; i++) {
-            authList.add(
-              AuthData(
-                userId: int.parse("${result[i]['id']}"),
-                email: "${result[i]['email']}",
-                password: "${result[i]['pass']}",
-                name: "${result[i]['name']}",
-                phone: "${result[i]['phone']}",
-                address: "${result[i]['address']}",
-                role: "${result[i]['role']}",
-              ),
-            );
-          }
-        }
-      });
-    });
-
-    return authList;
-  }
-
-  Future<List<TrainingData>> readAllTraining() async {
-    List<TrainingData> trainingList = [];
-
-    await openDB().then((db) async {
-      await db.rawQuery(
-        'SELECT * FROM training',
-      ).then((result) {
-        if(result.isNotEmpty) {
-          for(int i = 0; i < result.length; i++) {
-            trainingList.add(
-              TrainingData(
-                scheduleId: int.parse("${result[i]['id']}"),
-                date: result[i]['date'] != null && result[i]['date'] != '' ? DateTime.parse("${result[i]['date']}") : null,
-                hour: TimeOfDay.fromDateTime(DateTime.parse('2022-01-01 ${result[i]['hour']}')),
-                speaker: "${result[i]['speaker']}",
-                numberOfParticipant: int.parse("${result[i]['participant']}"),
-              ),
-            );
-          }
-        }
-      });
-    });
-
-    return trainingList;
-  }
-
   Future<List<AuthData>> readOnlyUserRole() async {
     List<AuthData> atuhList = [];
 
@@ -264,36 +134,6 @@ class LocalDB {
     });
 
     return auth;
-  }
-
-  Future<AuthData?> readLoginUser(String email, String pass) async {
-    AuthData? user;
-
-    await openDB().then((db) async {
-      await db.rawQuery(
-        'SELECT * FROM user WHERE email = ? AND pass = ?',
-        [
-          email,
-          pass,
-        ],
-      ).then((result) {
-        if(result.isNotEmpty) {
-          for(int i = 0; i < result.length; i++) {
-            user = AuthData(
-              userId: int.parse("${result[i]['id']}"),
-              name: "${result[i]['name']}",
-              phone: "${result[i]['phone']}",
-              email: "${result[i]['email']}",
-              password: "${result[i]['pass']}",
-              address: "${result[i]['address']}",
-              role: "${result[i]['role']}",
-            );
-          }
-        }
-      });
-    });
-
-    return user;
   }
 
   Future<List<TrainingParticipantData>> readTrainingParticipant(int trainingId) async {
@@ -356,46 +196,6 @@ class LocalDB {
   }
 
   // UPDATE
-  Future<bool> updateUser(AuthData user) async {
-    bool result = false;
-
-    await openDB().then((db) async {
-      await db.rawUpdate(
-        'UPDATE user SET name = ?, phone = ?, address = ? WHERE id = ?',
-        [
-          user.name,
-          user.phone,
-          user.address,
-          user.userId,
-        ],
-      ).then((_) {
-        result = true;
-      });
-    });
-
-    return result;
-  }
-
-  Future<bool> updateTraining(TrainingData training) async {
-    bool result = false;
-
-    await openDB().then((db) async {
-      await db.rawUpdate(
-        'UPDATE training SET date = ?, hour = ?, speaker = ? WHERE id = ?',
-        [
-          DateFormat('yyyy-MM-dd').format(training.date!),
-          DateFormat('HH:mm').format(DateTime(training.date!.year, training.date!.month, training.date!.day, training.hour!.hour, training.hour!.minute)),
-          training.speaker,
-          training.scheduleId,
-        ],
-      ).then((_) {
-        result = true;
-      });
-    });
-
-    return result;
-  }
-
   Future<bool> updateCertificateParticipant(String status, int trainingId, AuthData user) async {
     bool result = false;
 

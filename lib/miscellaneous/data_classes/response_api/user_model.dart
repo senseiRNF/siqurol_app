@@ -1,11 +1,11 @@
-class CreateUserData {
+class UserModelAPI {
   int? status;
   String? message;
   int? userId;
 
-  CreateUserData({this.status, this.message, this.userId});
+  UserModelAPI({this.status, this.message, this.userId});
 
-  CreateUserData.fromJson(Map<String, dynamic> json) {
+  UserModelAPI.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     userId = json['user_id'];

@@ -4,7 +4,7 @@ import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_dialog.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
-import 'package:siqurol_app/services/local_db.dart';
+import 'package:siqurol_app/services/api_services/training_services.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
 import 'package:siqurol_app/widgets/global_input_field.dart';
@@ -150,7 +150,7 @@ class _AdminFormScheduleScreenState extends State<AdminFormScheduleScreen> {
                   GlobalElevatedButton(
                     onPressed: () async {
                       if(widget.trainingData != null) {
-                        await LocalDB().updateTraining(
+                        await TrainingServices().updateTraining(
                           TrainingData(
                             scheduleId: widget.trainingData!.scheduleId,
                             date: selectedDateTime,
@@ -167,7 +167,7 @@ class _AdminFormScheduleScreenState extends State<AdminFormScheduleScreen> {
                           }
                         });
                       } else {
-                        await LocalDB().writeTraining(
+                        await TrainingServices().createTraining(
                           TrainingData(
                             date: selectedDateTime,
                             hour: selectedHour,

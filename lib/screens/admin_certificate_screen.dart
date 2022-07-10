@@ -4,7 +4,7 @@ import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/screens/admin_certificate_training_screen.dart';
-import 'package:siqurol_app/services/local_db.dart';
+import 'package:siqurol_app/services/api_services/training_services.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
@@ -27,7 +27,7 @@ class _AdminCertificateScreenState extends State<AdminCertificateScreen> {
   }
 
   void initLoad() async {
-    await LocalDB().readAllTraining().then((result) {
+    await TrainingServices().readAllTraining().then((result) {
       setState(() {
         trainingList = result;
       });

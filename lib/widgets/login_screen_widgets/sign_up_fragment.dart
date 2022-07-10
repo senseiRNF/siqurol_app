@@ -6,8 +6,6 @@ import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/screens/home_screen.dart';
 import 'package:siqurol_app/services/api_services/auth_services.dart';
-import 'package:siqurol_app/services/local_db.dart';
-import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_input_field.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
@@ -106,7 +104,7 @@ class SignUpFragment extends StatelessWidget {
               onPressed: () async {
                 if(passTEC.text == confPassTEC.text && nameTEC.text != '' && emailTEC.text != '' && passTEC.text != '' && phoneTEC.text != '' && addressTEC.text != '') {
                   GlobalDialog(context: context, message: 'Mendaftarkan data, pastikan data Anda sudah terisi dan benar, Lanjutkan?').optionDialog(() async {
-                    await AuthServices().createUser(
+                    await AuthServices().writeUser(
                       AuthData(
                         name: nameTEC.text,
                         email: emailTEC.text,

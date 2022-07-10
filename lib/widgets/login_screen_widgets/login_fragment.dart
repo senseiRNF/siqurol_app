@@ -5,8 +5,7 @@ import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
 import 'package:siqurol_app/screens/home_screen.dart';
-import 'package:siqurol_app/services/local_db.dart';
-import 'package:siqurol_app/services/shared_preferences.dart';
+import 'package:siqurol_app/services/api_services/auth_services.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_input_field.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
@@ -75,30 +74,12 @@ class LoginFragment extends StatelessWidget {
             GlobalElevatedButton(
               onPressed: () async {
                 if(emailTEC.text != '' && passTEC.text != '') {
-                  await LocalDB().readLoginUser(emailTEC.text, passTEC.text).then((loginResult) async {
-                    if(loginResult != null) {
-                      await LocalDB().readLoginUser(emailTEC.text, passTEC.text).then((_) {
-
-                      });
-                      await SharedPref().writeAuthorization(
-                        AuthData(
-                          userId: loginResult.userId,
-                          name: loginResult.name,
-                          phone: loginResult.phone,
-                          email: loginResult.email,
-                          password: loginResult.password,
-                          address: loginResult.address,
-                          role: loginResult.role,
-                        ),
-                      ).then((authResult) {
-                        if(authResult) {
-                          GlobalRoute(context: context).replaceWith(const HomeScreen());
-                        } else {
-                          GlobalDialog(context: context, message: 'Gagal masuk, silahkan periksa email atau password Anda, kemudian coba lagi').okDialog(() {
-
-                          });
-                        }
-                      });
+                  await AuthServices().loginUser(AuthData(
+                    email: emailTEC.text,
+                    password: passTEC.text,
+                  )).then((loginResult) async {
+                    if(loginResult) {
+                      GlobalRoute(context: context).replaceWith(const HomeScreen());
                     } else {
                       GlobalDialog(context: context, message: 'Gagal masuk, silahkan periksa email atau password Anda, kemudian coba lagi').okDialog(() {
 

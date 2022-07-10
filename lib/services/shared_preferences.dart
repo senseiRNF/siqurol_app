@@ -22,6 +22,7 @@ class SharedPref {
           auth.phone ?? 'Tak Diketahui',
           auth.address ?? 'Tak Diketahui',
           auth.role ?? 'Tak Diketahui',
+          auth.status ?? 'Tak Diketahui',
         ],
       ).then((_) {
         result = true;
@@ -47,6 +48,7 @@ class SharedPref {
           phone: stringList![4],
           address: stringList![5],
           role: stringList![6],
+          status: stringList![7],
         );
       }
     });

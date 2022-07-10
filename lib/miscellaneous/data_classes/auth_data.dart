@@ -6,6 +6,7 @@ class AuthData {
   String? phone;
   String? address;
   String? role;
+  String? status;
 
   AuthData({
     this.userId,
@@ -15,5 +16,6 @@ class AuthData {
     this.phone,
     this.address,
     this.role,
+    this.status,
   });
 }
