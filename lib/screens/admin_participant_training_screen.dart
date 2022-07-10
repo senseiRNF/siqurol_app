@@ -3,7 +3,8 @@ import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/training_participant_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_dialog.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
-import 'package:siqurol_app/services/local_db.dart';
+import 'package:siqurol_app/services/api_services/training_services.dart';
+import 'package:siqurol_app/services/api_services/user_services.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
@@ -31,9 +32,9 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
   }
 
   void initLoad() async {
-    await LocalDB().readTrainingParticipant(widget.trainingData.scheduleId!).then((tpList) async {
+    await TrainingServices().readTrainingParticipant(widget.trainingData.scheduleId!).then((tpList) async {
       if(tpList.isNotEmpty) {
-        await LocalDB().readOnlyUserRole().then((participant) {
+        await UserServices().readUserOnly().then((participant) {
           List<TrainingParticipantData> tempTrainingParticipantList = [];
 
           for(int i = 0; i < participant.length; i++) {
@@ -61,7 +62,7 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
           });
         });
       } else {
-        await LocalDB().readOnlyUserRole().then((participant) {
+        await UserServices().readUserOnly().then((participant) {
           List<TrainingParticipantData> tempTrainingParticipantList = [];
 
           for(int i = 0; i < participant.length; i++) {
@@ -115,15 +116,25 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
                       ),
                       content: CheckboxListTile(
                         onChanged: (checked) async {
-                          bool changed = trainingParticipantList[index].isChecked;
-
                           if(checked!) {
-                            await LocalDB().writeTrainingParticipant(
+                            await TrainingServices().createTrainingParticipant(
                               widget.trainingData.scheduleId!,
                               trainingParticipantList[index].auth,
-                            );
+                            ).then((result) {
+                              if(result) {
+                                GlobalDialog(context: context, message: 'Sukses menambahkan peserta').okDialog(() {
+                                  setState(() {
+                                    trainingParticipantList[index].isChecked = true;
+                                  });
+                                });
+                              } else {
+                                GlobalDialog(context: context, message: 'Gagal menambahkan peserta').okDialog(() {
+
+                                });
+                              }
+                            });
                           } else {
-                            await LocalDB().readTrainingParticipant(widget.trainingData.scheduleId!).then((checkCertificate) async {
+                            await TrainingServices().readTrainingParticipant(widget.trainingData.scheduleId!).then((checkCertificate) async {
                               for(int i = 0; i < checkCertificate.length; i++) {
                                 if(trainingParticipantList[index].auth.userId == checkCertificate[i].auth.userId) {
                                   if(checkCertificate[i].isChecked) {
@@ -131,19 +142,27 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
 
                                     });
                                   } else {
-                                    await LocalDB().deleteTrainingParticipant(
+                                    await TrainingServices().deleteTrainingParticipant(
                                       widget.trainingData.scheduleId!,
                                       trainingParticipantList[index].auth,
-                                    );
+                                    ).then((result) {
+                                      if(result) {
+                                        GlobalDialog(context: context, message: 'Sukses menghapus peserta').okDialog(() {
+                                          setState(() {
+                                            trainingParticipantList[index].isChecked = false;
+                                          });
+                                        });
+                                      } else {
+                                        GlobalDialog(context: context, message: 'Gagal menghapus peserta').okDialog(() {
+
+                                        });
+                                      }
+                                    });
                                   }
                                 }
                               }
                             });
                           }
-
-                          setState(() {
-                            trainingParticipantList[index].isChecked = !changed;
-                          });
                         },
                         value: trainingParticipantList[index].isChecked,
                         title: GlobalText(

@@ -4,7 +4,7 @@ import 'package:siqurol_app/miscellaneous/data_classes/training_data.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/screens/detail_certificate_screen.dart';
-import 'package:siqurol_app/services/local_db.dart';
+import 'package:siqurol_app/services/api_services/training_services.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
@@ -36,7 +36,7 @@ class _CertificateScreenState extends State<CertificateScreen> {
           username = auth.name;
         });
 
-        await LocalDB().readTrainingByUser(auth.userId!).then((result) async {
+        await TrainingServices().readTrainingByUser(auth.userId!).then((result) async {
           setState(() {
             certificateList = result;
           });

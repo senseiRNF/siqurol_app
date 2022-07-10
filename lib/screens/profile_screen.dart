@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_string.dart';
-import 'package:siqurol_app/services/api_services/auth_services.dart';
+import 'package:siqurol_app/services/api_services/user_services.dart';
 import 'package:siqurol_app/services/shared_preferences.dart';
 import 'package:siqurol_app/widgets/global_button.dart';
 import 'package:siqurol_app/widgets/global_input_field.dart';
@@ -104,7 +104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 20.0,),
                         child: GlobalElevatedButton(
                           onPressed: () async {
-                            await AuthServices().updateUser(
+                            await UserServices().updateUser(
                               AuthData(
                                 userId: userId,
                                 name: userAccount.text,

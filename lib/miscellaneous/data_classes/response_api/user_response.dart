@@ -1,17 +1,39 @@
-class LoginModelAPI {
+class CreateUserResponseAPI {
   int? status;
   String? message;
-  List<LoginDataAPI>? data;
+  int? userId;
 
-  LoginModelAPI({this.status, this.message, this.data});
+  CreateUserResponseAPI({this.status, this.message, this.userId});
 
-  LoginModelAPI.fromJson(Map<String, dynamic> json) {
+  CreateUserResponseAPI.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    message = json['message'];
+    userId = json['user_id'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['status'] = status;
+    data['message'] = message;
+    data['user_id'] = userId;
+    return data;
+  }
+}
+
+class ReadUserResponseAPI {
+  int? status;
+  String? message;
+  List<ReadUserDataAPI>? data;
+
+  ReadUserResponseAPI({this.status, this.message, this.data});
+
+  ReadUserResponseAPI.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
     if (json['data'] != null) {
-      data = <LoginDataAPI>[];
+      data = <ReadUserDataAPI>[];
       json['data'].forEach((v) {
-        data!.add(LoginDataAPI.fromJson(v));
+        data!.add(ReadUserDataAPI.fromJson(v));
       });
     }
   }
@@ -27,7 +49,7 @@ class LoginModelAPI {
   }
 }
 
-class LoginDataAPI {
+class ReadUserDataAPI {
   String? id;
   String? nama;
   String? noTelp;
@@ -37,7 +59,7 @@ class LoginDataAPI {
   String? role;
   String? statusUser;
 
-  LoginDataAPI({
+  ReadUserDataAPI({
     this.id,
     this.nama,
     this.noTelp,
@@ -48,7 +70,7 @@ class LoginDataAPI {
     this.statusUser,
   });
 
-  LoginDataAPI.fromJson(Map<String, dynamic> json) {
+  ReadUserDataAPI.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     nama = json['nama'];
     noTelp = json['no_telp'];

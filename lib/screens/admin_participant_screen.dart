@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:siqurol_app/miscellaneous/data_classes/auth_data.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
-import 'package:siqurol_app/services/local_db.dart';
+import 'package:siqurol_app/services/api_services/user_services.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
@@ -24,7 +24,7 @@ class _AdminParticipantScreenState extends State<AdminParticipantScreen> {
   }
 
   void initLoad() async {
-    await LocalDB().readOnlyUserRole().then((user) {
+    await UserServices().readUserOnly().then((user) {
       setState(() {
         participantList = user;
       });

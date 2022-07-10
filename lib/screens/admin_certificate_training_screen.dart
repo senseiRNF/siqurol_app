@@ -4,7 +4,9 @@ import 'package:siqurol_app/miscellaneous/data_classes/training_participant_data
 import 'package:siqurol_app/miscellaneous/functions/global_dialog.dart';
 import 'package:siqurol_app/miscellaneous/functions/global_route.dart';
 import 'package:siqurol_app/miscellaneous/variables/global_color.dart';
-import 'package:siqurol_app/services/local_db.dart';
+import 'package:siqurol_app/services/api_services/certificate_services.dart';
+import 'package:siqurol_app/services/api_services/training_services.dart';
+import 'package:siqurol_app/services/api_services/user_services.dart';
 import 'package:siqurol_app/widgets/global_header.dart';
 import 'package:siqurol_app/widgets/global_padding.dart';
 import 'package:siqurol_app/widgets/global_text.dart';
@@ -32,9 +34,9 @@ class _AdminCertificateTrainingScreenState extends State<AdminCertificateTrainin
   }
 
   void initLoad() async {
-    await LocalDB().readTrainingParticipant(widget.trainingData.scheduleId!).then((tpList) async {
+    await TrainingServices().readTrainingParticipant(widget.trainingData.scheduleId!).then((tpList) async {
       if(tpList.isNotEmpty) {
-        await LocalDB().readOnlyUserRole().then((participant) {
+        await UserServices().readUserOnly().then((participant) {
           List<TrainingParticipantData> tempParticipantList = [];
 
           for(int j = 0; j < participant.length; j++) {
@@ -96,25 +98,43 @@ class _AdminCertificateTrainingScreenState extends State<AdminCertificateTrainin
                       ),
                       content: CheckboxListTile(
                         onChanged: (checked) async {
-                          bool changed = participantList[index].isChecked;
-
                           if(checked!) {
-                            await LocalDB().updateCertificateParticipant(
+                            await CertificateServices().updateCertificateParticipant(
                               'received',
                               widget.trainingData.scheduleId!,
                               participantList[index].auth,
-                            );
+                            ).then((result) {
+                              if(result) {
+                                GlobalDialog(context: context, message: 'Sukses mengubah data').okDialog(() {
+                                  setState(() {
+                                    participantList[index].isChecked = true;
+                                  });
+                                });
+                              } else {
+                                GlobalDialog(context: context, message: 'Gagal mengubah data').okDialog(() {
+
+                                });
+                              }
+                            });
                           } else {
-                            await LocalDB().updateCertificateParticipant(
+                            await CertificateServices().updateCertificateParticipant(
                               'detained',
                               widget.trainingData.scheduleId!,
                               participantList[index].auth,
-                            );
-                          }
+                            ).then((result) {
+                              if(result) {
+                                GlobalDialog(context: context, message: 'Sukses mengubah data').okDialog(() {
+                                  setState(() {
+                                    participantList[index].isChecked = false;
+                                  });
+                                });
+                              } else {
+                                GlobalDialog(context: context, message: 'Gagal mengubah data').okDialog(() {
 
-                          setState(() {
-                            participantList[index].isChecked = !changed;
-                          });
+                                });
+                              }
+                            });
+                          }
                         },
                         value: participantList[index].isChecked,
                         title: GlobalText(

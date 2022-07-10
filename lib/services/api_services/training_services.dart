@@ -8,7 +8,6 @@ import 'package:siqurol_app/miscellaneous/data_classes/training_participant_data
 import 'package:siqurol_app/services/api_services/init_api.dart';
 
 class TrainingServices {
-  // Training
   Future<bool> createTraining(TrainingData data) async {
     bool result = false;
 
@@ -75,7 +74,7 @@ class TrainingServices {
       await dio.get(
         '/read-all-training.php',
       ).then((getResult) {
-        TrainingModelAPI trainingModel = TrainingModelAPI.fromJson(getResult.data);
+        TrainingResponseAPI trainingModel = TrainingResponseAPI.fromJson(getResult.data);
 
         if(trainingModel.data != null && trainingModel.data!.isNotEmpty) {
           for(int i = 0; i < trainingModel.data!.length; i++) {
@@ -95,7 +94,40 @@ class TrainingServices {
     return result;
   }
 
-  // Training Participant
+  Future<List<TrainingData>> readTrainingByUser(int userId) async {
+    List<TrainingData> trainingList = [];
+
+    await InitAPI().clientAdapter().then((dio) async {
+      try {
+        await dio.get(
+          '/read-training-by-user.php',
+          queryParameters: {
+            'id': userId,
+          },
+        ).then((getResult) {
+          TrainingResponseAPI trainingResponseAPI = TrainingResponseAPI.fromJson(getResult.data);
+
+          if(trainingResponseAPI.data != null && trainingResponseAPI.data!.isNotEmpty) {
+            for(int i = 0; i < trainingResponseAPI.data!.length; i++) {
+              trainingList.add(
+                TrainingData(
+                  scheduleId: int.parse(trainingResponseAPI.data![i].id!),
+                  date: trainingResponseAPI.data![i].tanggal != null && trainingResponseAPI.data![i].tanggal != '' ? DateTime.parse("${trainingResponseAPI.data![i].tanggal}") : null,
+                  hour: TimeOfDay.fromDateTime(DateTime.parse('2022-01-01 ${trainingResponseAPI.data![i].jam}')),
+                  speaker: trainingResponseAPI.data![i].pembicara,
+                ),
+              );
+            }
+          }
+        });
+      } on DioError catch(_) {
+
+      }
+    });
+
+    return trainingList;
+  }
+
   Future<bool> createTrainingParticipant(int trainingId, AuthData user) async {
     bool result = false;
 
@@ -110,7 +142,7 @@ class TrainingServices {
     await InitAPI().clientAdapter().then((dio) async {
       try {
         await dio.post(
-          '/write-training_participant.php',
+          '/write-training-participant.php',
           data: formData,
         ).then((postResult) async {
           if(postResult.data['status'] == 1) {
@@ -125,32 +157,69 @@ class TrainingServices {
     return result;
   }
 
-  /*Future<List<TrainingParticipantData>> readTrainingParticipant(int trainingId) async {
+  Future<List<TrainingParticipantData>> readTrainingParticipant(int trainingId) async {
     List<TrainingParticipantData> result = [];
 
     await InitAPI().clientAdapter().then((dio) async {
-      await dio.get(
-        '/read-training-participant.php',
-      ).then((getResult) {
-        TrainingModelAPI trainingModel = TrainingModelAPI.fromJson(getResult.data);
+      try {
+        await dio.get(
+          '/read-training-participant.php',
+          queryParameters: {
+            'id': trainingId,
+          },
+        ).then((getResult) {
+          TrainingParticipantResponseAPI participantResponseAPI = TrainingParticipantResponseAPI.fromJson(getResult.data);
 
-        if(trainingModel.data != null && trainingModel.data!.isNotEmpty) {
-          for(int i = 0; i < trainingModel.data!.length; i++) {
-            result.add(
-              TrainingParticipantData(
-                auth: AuthData(
-                  userId: int.parse(trainingModel.data![i].id!),
-                  name: "${result[i]['name']}",
-                  email: "${result[i]['email']}",
+          if (participantResponseAPI.data != null &&
+              participantResponseAPI.data!.isNotEmpty) {
+            for (int i = 0; i < participantResponseAPI.data!.length; i++) {
+              result.add(
+                TrainingParticipantData(
+                  auth: AuthData(
+                    userId: int.parse(participantResponseAPI.data![i].id!),
+                    name: participantResponseAPI.data![i].nama,
+                    email: participantResponseAPI.data![i].email,
+                  ),
+                  isChecked: participantResponseAPI.data![i].statusSertifikat ==
+                      'received' ? true : false,
                 ),
-                isChecked: result[i]['certificate_status'] == 'received' ? true : false,
-              ),
-            );
+              );
+            }
           }
-        }
-      });
+        });
+      } on DioError catch (_) {
+
+      }
     });
 
     return result;
-  }*/
+  }
+
+  Future<bool> deleteTrainingParticipant(int trainingId, AuthData user) async {
+    bool result = false;
+
+    FormData formData = FormData.fromMap(
+      {
+        'id_jadwal': trainingId,
+        'id_user': user.userId,
+      },
+    );
+
+    await InitAPI().clientAdapter().then((dio) async {
+      try {
+        await dio.post(
+          '/delete-training-participant.php',
+          data: formData,
+        ).then((postResult) async {
+          if(postResult.data['status'] == 1) {
+            result = true;
+          }
+        });
+      } on DioError catch(_) {
+
+      }
+    });
+
+    return result;
+  }
 }
