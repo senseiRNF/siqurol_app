@@ -66,12 +66,14 @@ class _AdminParticipantTrainingScreenState extends State<AdminParticipantTrainin
           List<TrainingParticipantData> tempTrainingParticipantList = [];
 
           for(int i = 0; i < participant.length; i++) {
-            tempTrainingParticipantList.add(
-              TrainingParticipantData(
-                auth: participant[i],
-                isChecked: false,
-              ),
-            );
+            if(participant[i].status == 'active') {
+              tempTrainingParticipantList.add(
+                TrainingParticipantData(
+                  auth: participant[i],
+                  isChecked: false,
+                ),
+              );
+            }
           }
 
           setState(() {

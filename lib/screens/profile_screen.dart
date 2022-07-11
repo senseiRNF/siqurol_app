@@ -29,6 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String? email;
   String? role;
+  String? status;
 
   @override
   void initState() {
@@ -47,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           phoneAccount.text = auth.phone ?? 'Tak Diketahui';
           addressAccount.text = auth.address ?? 'Tak Diketahui';
           role = auth.role ?? 'user';
+          status = auth.status ?? 'inactive';
         });
       }
     });
@@ -112,6 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 address: addressAccount.text,
                                 email: email,
                                 role: role,
+                                status: status,
                               ),
                             ).then((authResult) async {
                               if(authResult) {

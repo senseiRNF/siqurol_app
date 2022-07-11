@@ -37,6 +37,7 @@ class UserServices {
                 phone: data.phone,
                 address: data.address,
                 role: data.role,
+                status: 'inactive',
               ),
             ).then((authResult) {
               if(authResult) {
@@ -80,6 +81,7 @@ class UserServices {
                 address: data.address,
                 email: data.email,
                 role: data.role,
+                status: data.status,
               ),
             ).then((writeAuth) {
               if(writeAuth) {
@@ -120,6 +122,34 @@ class UserServices {
           }
         }
       });
+    });
+
+    return result;
+  }
+
+  Future<bool> updateUserStatus(AuthData data) async {
+    bool result = false;
+
+    FormData formData = FormData.fromMap(
+      {
+        'id': data.userId,
+        'status_user': data.status,
+      },
+    );
+
+    await InitAPI().clientAdapter().then((dio) async {
+      try {
+        await dio.post(
+          '/update-user-status.php',
+          data: formData,
+        ).then((postResult) async {
+          if(postResult.data['status'] == 1) {
+            result = true;
+          }
+        });
+      } on DioError catch(_) {
+
+      }
     });
 
     return result;
